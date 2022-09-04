@@ -13,14 +13,14 @@ Icon=system-shutdown
 Type=Service
 ServiceTypes=Plasma/Applet
 
-X-KDE-PluginInfo-Author=Carlos López Sánchez
+X-KDE-PluginInfo-Author=Wissem Yahiaoui
 X-KDE-PluginInfo-Category=Utilities
-X-KDE-PluginInfo-Email=<musikolo{AT}hotmail[DOT]com> 
+X-KDE-PluginInfo-Email=<wissem.yahiaouii{AT}gmail[DOT]com> 
 X-KDE-PluginInfo-EnabledByDefault=true
-X-KDE-PluginInfo-License=GPL3
+X-KDE-PluginInfo-License=
 X-KDE-PluginInfo-Name=org.kde.plasma.multimonitor
 X-KDE-PluginInfo-Version=2.0
-X-KDE-PluginInfo-Website=https://github.com/Musikolo
+X-KDE-PluginInfo-Website=https://github.com/wyahiaoui
 
 X-Plasma-API=declarativeappletscript
 X-Plasma-MainScript=ui/main.qml
