@@ -2,9 +2,7 @@
 
 #include "systempanel.h"
 #include <iostream>
-#include <vector>
-#include <X11/Xlib.h>
-#include <X11/extensions/Xrandr.h>
+
 bool compareScreen(ScreenParams i1, ScreenParams i2)
 {
     return (i1.x() < i2.x());
@@ -45,22 +43,43 @@ std::vector<ScreenParams> SystemPanel::screenInfo(){
     std::vector<ScreenParams> screens;
     while (i < monitor_count)
     {
-    
-        std::cout << "Monitor " << i << " : " << XGetAtomName(display, info->name) << " " << info->height << " " << info->width << std::endl;
-        std::cout << "Position: " << info->x << ", " << info->y << std::endl;
-        // ScreenParams screen = ScreenParams( XGetAtomName(display, info->name), i++, info->width, info->height, info->x, info->y);
-        // std::cout << "paras" << screen.width() << screen.height() << std::endl;
         screens.push_back(ScreenParams( XGetAtomName(display, info->name), i++, info->width, info->height, info->x, info->y));
-        // i++;
         info++;
-        // return ScreenParams( XGetAtomName(display, info->name), info->width, info->height, info->x, info->y);
-
     }
     XCloseDisplay(display); 
     sort(screens.begin(), screens.end(),  compareScreen);
     return screens;
 }
 
-QString SystemPanel::test() {
-    return QString("3asslema");
+QString SystemPanel::homeDirectory() {
+    const char *homedir = NULL;
+    struct passwd* pwd = getpwuid(getuid());
+    if (pwd)
+    {
+        homedir = pwd->pw_dir;
+    }
+    else if ((homedir = getenv("HOME")) == NULL) {
+        homedir = getpwuid(getuid())->pw_dir;
+    }
+    return  QString::fromUtf8(homedir);
+}
+
+
+
+QString SystemPanel::read_file(const char *filename) {
+    std::ifstream t(filename);
+    std::string str;
+
+    // t.seekg(0, std::ios::end);   
+    // str.reserve(t.tellg());
+    // t.seekg(0, std::ios::beg);
+
+    str.assign((std::istreambuf_iterator<char>(t)),
+                std::istreambuf_iterator<char>());
+    return QString::fromUtf8(str.c_str());
+}
+
+void SystemPanel::write_file(const char *filename, const char* content) {
+    std::ofstream plasmaConfig(filename);
+    plasmaConfig >> content;
 }

@@ -6,6 +6,14 @@
 #include <QObject>
 #include <QtQml>
 #include <string>
+#include <fstream>
+#include <streambuf>
+#include <vector>
+#include <unistd.h>
+#include <sys/types.h>
+#include <pwd.h>
+#include <X11/Xlib.h>
+#include <X11/extensions/Xrandr.h>
 
 class ScreenParams
 {
@@ -65,7 +73,9 @@ public:
 public Q_SLOTS:
     int turnOffScreen();
     std::vector<ScreenParams> screenInfo();
-    QString test();
+    QString homeDirectory();
+    QString SystemPanel::read_file(const char *filename);
+    void SystemPanel::write_file(const char *filename, const char* content);
 };
 
 #endif

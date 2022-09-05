@@ -43,6 +43,8 @@ Item {
 
     function screenInfo() {
         var plugin = getSystemPanelPlugin()
+        plugin.homeDirectory()
+        // console.log()
         return plugin.screenInfo()
     }
 }
