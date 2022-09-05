@@ -123,7 +123,13 @@ Item {
                         Component.onCompleted: {
                             // mapToGlob
                         }
-                        
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: {
+                                // do what you want here
+                                console.log("lalalal", modelData);
+                            }
+                        }
                     }
 
                 // }

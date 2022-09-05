@@ -43,8 +43,6 @@ Item {
 
     function screenInfo() {
         var plugin = getSystemPanelPlugin()
-        var parms = plugin.screenInfo();
-        console.log("lala", parms)
-        return parms
+        return plugin.screenInfo()
     }
 }
