@@ -5,6 +5,10 @@
 #include <vector>
 #include <X11/Xlib.h>
 #include <X11/extensions/Xrandr.h>
+bool compareScreen(ScreenParams i1, ScreenParams i2)
+{
+    return (i1.x() < i2.x());
+}
 
 SystemPanel::SystemPanel(QObject *parent) : QObject(parent) {
 }
@@ -19,7 +23,7 @@ int SystemPanel::turnOffScreen(){
     return result;
 }
 
-ScreenParams SystemPanel::screenInfo(){
+std::vector<ScreenParams> SystemPanel::screenInfo(){
     
     int monitor_count = 0;
 
@@ -41,15 +45,20 @@ ScreenParams SystemPanel::screenInfo(){
     std::vector<ScreenParams> screens;
     while (i < monitor_count)
     {
-        screens.push_back(ScreenParams( XGetAtomName(display, info->name), info->width, info->height, info->x, info->y));
-        std::cout << "Monitor " << i++ << " : " << XGetAtomName(display, info->name) << " " << info->height << " " << info->width << std::endl;
+    
+        std::cout << "Monitor " << i << " : " << XGetAtomName(display, info->name) << " " << info->height << " " << info->width << std::endl;
         std::cout << "Position: " << info->x << ", " << info->y << std::endl;
+        // ScreenParams screen = ScreenParams( XGetAtomName(display, info->name), i++, info->width, info->height, info->x, info->y);
+        // std::cout << "paras" << screen.width() << screen.height() << std::endl;
+        screens.push_back(ScreenParams( XGetAtomName(display, info->name), i++, info->width, info->height, info->x, info->y));
+        // i++;
         info++;
-        return ScreenParams( XGetAtomName(display, info->name), info->width, info->height, info->x, info->y);
+        // return ScreenParams( XGetAtomName(display, info->name), info->width, info->height, info->x, info->y);
 
     }
     XCloseDisplay(display); 
-    return screens[0];
+    sort(screens.begin(), screens.end(),  compareScreen);
+    return screens;
 }
 
 QString SystemPanel::test() {

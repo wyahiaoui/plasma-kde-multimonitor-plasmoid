@@ -40,11 +40,11 @@ Item {
             console.exception('ERROR: Turning off screen - SystemPanel plugin not available')
         }
     }
-    property var screenInfo: 
+
     function screenInfo() {
         var plugin = getSystemPanelPlugin()
         var parms = plugin.screenInfo();
-        console.log("info", plugin.screenInfo().name)
-        return plugin.screenInfo().name;
+        console.log("lala", parms)
+        return parms
     }
 }

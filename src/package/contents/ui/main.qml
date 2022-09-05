@@ -13,11 +13,11 @@ Item {
     readonly property int medButtonSize: units.iconSizes.medium
     readonly property int maxButtonSize: units.iconSizes.large
 
-    Layout.minimumWidth: minButtonSize * itemGrid.columns
-    Layout.minimumHeight: minButtonSize * itemGrid.rows
+    // Layout.minimumWidth: minButtonSize * itemGrid.columns
+    // Layout.minimumHeight: minButtonSize * itemGrid.rows
 
-    Layout.maximumWidth: maxButtonSize * itemGrid.columns
-    Layout.maximumHeight: maxButtonSize * itemGrid.rows
+    // Layout.maximumWidth: maxButtonSize * itemGrid.columns
+    // Layout.maximumHeight: maxButtonSize * itemGrid.rows
     
     readonly property int iconSize: {
         var value = 0
@@ -41,8 +41,8 @@ Item {
     }
     
     // property SystemPanel inter: SystemPanel
-    Layout.preferredWidth: (iconSize * itemGrid.columns)
-    Layout.preferredHeight: (iconSize * itemGrid.rows)
+    Layout.preferredWidth: (iconSize  * itemGrid.columns)
+    Layout.preferredHeight: (iconSize  * itemGrid.rows)
 
     Plasmoid.preferredRepresentation: Plasmoid.fullRepresentation
     
@@ -54,9 +54,81 @@ Item {
     
     Grid {
         id: itemGrid
-        Label {
-            text: systemPanel.screenInfo()
+        
+        readonly property int numVisibleButtons: (visibleChildren.length - 1)
+        
+        rows: {
+            var value = plasmoid.configuration.rows
+            if(plasmoid.configuration.inlineBestFit){
+                if(plasmoid.formFactor != PlasmaCore.Types.Vertical){
+                    value = 1;
+                }
+                else {
+                    value = numVisibleButtons
+                }
+            }
+            
+            return value
         }
+        columns: {
+            var value = plasmoid.configuration.columns
+            if(plasmoid.configuration.inlineBestFit){
+                if(plasmoid.formFactor === PlasmaCore.Types.Vertical){
+                    value = 1;
+                }
+                else {
+                    value = numVisibleButtons
+                }
+            }
+            
+            return value
+        }
+        spacing: 0
+        width: parent.width
+        height: parent.height
+
+        // Label {
+            // for (const screen in systemPanel.screenInfo()) 
+            Repeater {
+                property int itemWidth: Math.floor(parent.width/parent.columns)
+                property int itemHeight: Math.floor(parent.height/parent.rows)
+                property int iconSize: Math.min(itemWidth, itemHeight)
+                id: items
+                model: systemPanel.screenInfo()
+                delegate: 
+                // Column {
+                // Grid {
+                    // x: Math.floor(modelData.x/250)
+                    // y: Math.floor(modelData.y)
+                    Image {
+                        Layout.fillHeight: true
+                        Layout.fillWidth: true
+                        visible: true
+                        fillMode: Image.PreserveAspectFit
+                        source: "../../../image/computer-screen-svgrepo-com.svg"
+                        width: modelData.width / 30
+                        height: modelData.height / 30
+                        // x: 150 * index
+                        y: Math.floor(modelData.y)
+                        Label {
+                            text: modelData.id
+                            // x: modelData.x/100
+                            // y: 10
+                        }
+                        // Label {
+                        //     text: modelData.width + "x" + modelData.height 
+                        //     // x: 10
+                        //     // y: 25
+                        // }
+                        Component.onCompleted: {
+                            // mapToGlob
+                        }
+                        
+                    }
+
+                // }
+            }
+        // }
     }
     
 }

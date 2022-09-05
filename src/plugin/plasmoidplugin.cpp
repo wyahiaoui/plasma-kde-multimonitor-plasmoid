@@ -11,5 +11,6 @@ void PlasmoidPlugin::registerTypes(const char *uri)
     
     qmlRegisterType<SystemPanel>(uri, 1, 0, "SystemPanel");
     // qmlRegisterType<ScreenParams>(uri, 1, 0, "ScreenParams");
-    qRegisterMetaType<ScreenParams>();
+    // qRegisterMetaType<ScreenParams>();
+    qRegisterMetaType<std::vector<ScreenParams>>();
 }
