@@ -5,7 +5,7 @@ import org.kde.plasma.plasmoid 2.0
 import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.plasma.components 2.0
 
-
+import "../code/widgetHandler.js" as WidgetHandler
 Item {
     id: root
 
@@ -127,7 +127,11 @@ Item {
                             anchors.fill: parent
                             onClicked: {
                                 // do what you want here
-                                console.log("lalalal", modelData);
+                                var data = systemPanel.readData()
+                                // console.log("Rdata", data)
+                                data = WidgetHandler.remove_applets(data);
+                                // console.log("removed", data)
+                                systemPanel.writeData(data)
                             }
                         }
                     }

@@ -3,7 +3,8 @@
 #include "systempanel.h"
 #include <iostream>
 
-bool compareScreen(ScreenParams i1, ScreenParams i2)
+
+static bool compareScreen(ScreenParams i1, ScreenParams i2)
 {
     return (i1.x() < i2.x());
 }
@@ -19,6 +20,19 @@ int SystemPanel::turnOffScreen(){
     const int result = system("/usr/bin/xset dpms force off");
     
     return result;
+}
+
+int SystemPanel::monitorCount(){
+    int monitor_count = 0;
+    auto display = XOpenDisplay(NULL);
+    if (display == NULL)
+    {
+        std::cout << "Failed to open display!" << std::endl;
+        return {};
+    }
+    auto wnd = XDefaultRootWindow(display);
+    XRRMonitorInfo *info = XRRGetMonitors(display, wnd, 0, &monitor_count);
+    return monitor_count;
 }
 
 std::vector<ScreenParams> SystemPanel::screenInfo(){
@@ -51,7 +65,7 @@ std::vector<ScreenParams> SystemPanel::screenInfo(){
     return screens;
 }
 
-QString SystemPanel::homeDirectory() {
+static const char * homeDirectory() {
     const char *homedir = NULL;
     struct passwd* pwd = getpwuid(getuid());
     if (pwd)
@@ -61,13 +75,13 @@ QString SystemPanel::homeDirectory() {
     else if ((homedir = getenv("HOME")) == NULL) {
         homedir = getpwuid(getuid())->pw_dir;
     }
-    return  QString::fromUtf8(homedir);
+    return  homedir;
 }
 
 
 
 QString SystemPanel::read_file(const char *filename) {
-    std::ifstream t(filename);
+    std::ifstream t(std::string(homeDirectory()) + std::string(filename));
     std::string str;
 
     // t.seekg(0, std::ios::end);   
@@ -79,7 +93,8 @@ QString SystemPanel::read_file(const char *filename) {
     return QString::fromUtf8(str.c_str());
 }
 
-void SystemPanel::write_file(const char *filename, const char* content) {
-    std::ofstream plasmaConfig(filename);
-    plasmaConfig >> content;
+void SystemPanel::write_file(QString content) {
+    std::ofstream plasmaConfig(std::string(homeDirectory()) + std::string(DST_FILE));
+    plasmaConfig << content.toStdString();
+    std::system("kquitapp5 plasmashell || killall plasmashell ; kstart5 plasmashell &");
 }

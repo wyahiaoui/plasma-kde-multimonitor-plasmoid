@@ -2,6 +2,9 @@
 #ifndef SYSTEM_PANEL_H
 #define SYSTEM_PANEL_H
 
+#define DST_FILE "/.config/plasma-org.kde.plasma.desktop-appletsrc"
+
+// #define DST_FILE "/TTplasma-org.kde.plasma.desktop-appletsrc"
 
 #include <QObject>
 #include <QtQml>
@@ -72,10 +75,10 @@ public:
     // Q_INVOKABLE 
 public Q_SLOTS:
     int turnOffScreen();
+    int monitorCount();
     std::vector<ScreenParams> screenInfo();
-    QString homeDirectory();
-    QString SystemPanel::read_file(const char *filename);
-    void SystemPanel::write_file(const char *filename, const char* content);
+    QString read_file(const char *filename =  DST_FILE);
+    void write_file(QString content);
 };
 
 #endif
