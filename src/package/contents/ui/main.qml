@@ -90,9 +90,11 @@ Item {
         // Label {
             // for (const screen in systemPanel.screenInfo()) 
             Repeater {
+
                 property int itemWidth: Math.floor(parent.width/parent.columns)
                 property int itemHeight: Math.floor(parent.height/parent.rows)
                 property int iconSize: Math.min(itemWidth, itemHeight)
+                property string dataConfig: ""
                 id: items
                 model: systemPanel.screenInfo()
                 delegate: 
@@ -101,6 +103,8 @@ Item {
                     // x: Math.floor(modelData.x/250)
                     // y: Math.floor(modelData.y)
                     Image {
+                        id: screenImg
+                        property int widgetCount: 0
                         Layout.fillHeight: true
                         Layout.fillWidth: true
                         visible: true
@@ -115,22 +119,40 @@ Item {
                             // x: modelData.x/100
                             // y: 10
                         }
+                        
+                        Label {
+                            text: screenImg.widgetCount
+                            y: 10
+                        }   
                         // Label {
                         //     text: modelData.width + "x" + modelData.height 
                         //     // x: 10
                         //     // y: 25
                         // }
                         Component.onCompleted: {
-                            // mapToGlob
+                            console.log("complted")
+                            items.dataConfig = systemPanel.readData()
                         }
+                        
+                        Timer {
+                            running: true
+                            repeat: true
+                            interval: 60 * 3 // Update every 60 seconds maybe?
+                            onTriggered: {
+                                screenImg.widgetCount = WidgetHandler.countsApplets(items.dataConfig, modelData.id)
+                            }
+                        }
+                        
                         MouseArea {
                             anchors.fill: parent
                             onClicked: {
                                 // do what you want here
-                                var data = systemPanel.readData()
+
                                 // console.log("Rdata", data)
-                                data = WidgetHandler.remove_applets(data);
+                                // WidgetHandler.removeApplets(items.dataConfig);
                                 // console.log("removed", data)
+                                items.dataConfig = systemPanel.readData()
+                                var data = WidgetHandler.moveToDisplay(items.dataConfig, 0, 2);
                                 systemPanel.writeData(data)
                             }
                         }

@@ -6,25 +6,25 @@ class AppletDesktopContainments {
       this.attributes = [];
     }
   
-    print_applet() {
-      console.log("config", "[" + "][".join(this.config) + "]");
+    printApplet() {
+      console.log("config", "[" + this.config.join("][") + "]");
       console.log("attributes", this.attributes);
     }
   
 }
 
 
-function parse_file(content) {
-  content = content.split("\n\n")
-  elements = [];
+function parseFile(content) {
+  var elements = [];
 
   for (var _pj_c = 0; _pj_c < content.length; _pj_c += 1) {
-    var conf = content[_pj_c];
-    element = new AppletDesktopContainments();
+    var conf = content[_pj_c].split("\n");
 
-    for (var line, _pj_f = 0, _pj_d = conf.split("\n"), _pj_e = _pj_d.length; _pj_f < _pj_e; _pj_f += 1) {
-      line = _pj_d[_pj_f];
+    var element = new AppletDesktopContainments();
 
+    for (var _pj_f = 0; _pj_f < conf.length; _pj_f += 1) {
+      var line = conf[_pj_f];
+      // console.log("LIENNEEE", line)
       if (line === "") {
         continue;
       }
@@ -42,23 +42,26 @@ function parse_file(content) {
           }
         }
       } else {
-        attribute = {};
-        splitted = line.split("=");
+        var splitted = line.split("=");
         element.attributes += [[splitted[0], splitted.length > 1 ? splitted[1] : ""]];
       }
     }
 
-    elements += [element];
+    
+    // element.printApplet()
+    if (typeof(element) != "object")
+      console.log("elem", typeof(element), element.config)
+    elements.push(element);
   }
-
+  
   return elements;
 }
   
 
-function remove_applets(content) {
-    var config, new_applet, skip;
+function removeApplets(content) {
+    var config, newApplet, skip;
     skip = false;
-    new_applet = "";
+    newApplet = "";
     content = content.split("\n\n")
     for (var _pj_c = 0; _pj_c < content.length; _pj_c += 1) {
       var conf = content[_pj_c];
@@ -85,45 +88,47 @@ function remove_applets(content) {
           if (skip) {
             continue;
           } else {
-            new_applet += line + "\n";
+            newApplet += line + "\n";
           }
         } else {
-          new_applet += line + "\n";
+          newApplet += line + "\n";
         }
       }
   
       if (!skip) {
-        new_applet += "\n";
+        newApplet += "\n";
       }
   
       skip = false;
     }
   
-    return new_applet;
+    return newApplet;
 }
   
-function build_conf(par) {
-    var new_applet;
-    new_applet = "[" + "][".join(par.config) + "]\n";
+function buildConf(par) {
+    var newApplet;
+    newApplet = "[" + par.config.join("][") + "]\n";
   
     for (var pp, _pj_c = 0, content = par.attributes, _pj_b = content.length; _pj_c < _pj_b; _pj_c += 1) {
       pp = content[_pj_c];
-      new_applet += pp[0] + "=" + pp[1] + "\n";
+      newApplet += pp[0] + "=" + pp[1] + "\n";
     }
   
-    new_applet += "\n";
-    return new_applet;
+    newApplet += "\n";
+    return newApplet;
 }
 
-function move_to_display(content, src_screen, dst_screen) {
-  var config, line, new_applet;
-  new_applet = "";
+function moveToDisplay(content, srcScreen, dstScreen) {
+  var config, line, newApplet;
+  newApplet = "";
   content = content.split("\n\n")
-  for (var conf, _pj_c = 0, content = content, _pj_b = content.length; _pj_c < _pj_b; _pj_c += 1) {
-    conf = content[_pj_c];
+  srcScreen += 1;
+  dstScreen += 1;
+  for (var  _pj_c = 0; _pj_c < content.length; _pj_c += 1) {
+    var conf = content[_pj_c];
 
-    for (var line, _pj_f = 0, _pj_d = conf.split("\n"), _pj_e = _pj_d.length; _pj_f < _pj_e; _pj_f += 1) {
-      line = _pj_d[_pj_f];
+    for (var _pj_f = 0, _pj_d = conf.split("\n"); _pj_f < _pj_d.length; _pj_f += 1) {
+      var line = _pj_d[_pj_f];
 
       if (line === "") {
         continue;
@@ -134,93 +139,113 @@ function move_to_display(content, src_screen, dst_screen) {
 
         if (config.length > 2) {
 
-          if (config[1] === src_screen.toString() && config[2] === "Applets") {
-            config[1] = dst_screen.toString();
-            line = "[" + "][".join(config) + "]";
+          if (config[1] === srcScreen.toString() && config[2] === "Applets") {
+            config[1] = dstScreen.toString();
+            line = "[" + config.join("][") + "]";
           }
         }
 
-        new_applet += line + "\n";
+        newApplet += line + "\n";
       } else {
-        new_applet += line + "\n";
+        newApplet += line + "\n";
       }
     }
 
-    new_applet += "\n";
+    newApplet += "\n";
   }
 
-  return new_applet;
+  return newApplet;
 }
-  
-function move_widgets(content, src_screen, dst_screen) {
-  var forwarded, geo, holden, new_applet, parsed, stop;
-  new_applet = "";
+
+function mostApplet() {
+
+}
+
+function moveWidgets(content, srcScreen, dstScreen) {
+  var forwarded, geo, holden, newApplet, parsed, stop;
+  newApplet = "";
   forwarded = "";
   content = content.split("\n\n");
-  parsed = parse_file(content);
+  parsed = parseFile(content);
   holden = "";
   geo = "";
   stop = false;
-
+  srcScreen += 1;
+  dstScreen += 1;
   for (var  _pj_c = 0; _pj_c < parsed.length; _pj_c += 1) {
     var par = parsed[_pj_c];
 
-    if (par.config.length === 2 && par.config[0] === "Containments" && (par.config[1] === dst_screen || par.config[1] === src_screen)) {
-      if (par.config[1] === src_screen) {
-        new_applet += "[" + "][".join(par.config) + "]\n";
+    if (par.config.length === 2 && par.config[0] === "Containments" && (par.config[1] === dstScreen || par.config[1] === srcScreen)) {
+      if (par.config[1] === srcScreen) {
+        newApplet += "[" + "][".join(par.config) + "]\n";
 
         for (var _pj_f = 0, _pj_d = par.attributes; _pj_f < _pj_d.length; _pj_f += 1) {
           var att = _pj_d[_pj_f];
 
           if (!att[0].startswith("ItemGeometries")) {
-            new_applet += att[0] + "=" + att[1] + "\n";
+            newApplet += att[0] + "=" + att[1] + "\n";
           } else {
             geo += att[0] + "=" + att[1] + "\n";
           }
         }
 
-        new_applet += "\n";
+        newApplet += "\n";
 
-        if (Number.parseInt(src_screen) > Number.parseInt(dst_screen)) {
+        if (Number.parseInt(srcScreen) > Number.parseInt(dstScreen)) {
           stop = true;
         }
       } else {
-        if (par.config[1] === dst_screen) {
-          new_applet += "[" + "][".join(par.config) + "]\n";
-          new_applet += geo;
+        if (par.config[1] === dstScreen) {
+          newApplet += "[" + "][".join(par.config) + "]\n";
+          newApplet += geo;
 
           for (var pp, _pj_f = 0, _pj_d = par.attributes, _pj_e = _pj_d.length; _pj_f < _pj_e; _pj_f += 1) {
             pp = _pj_d[_pj_f];
 
             if (!pp[0].startswith("ItemGeometries")) {
-              new_applet += pp[0] + "=" + pp[1] + "\n";
+              newApplet += pp[0] + "=" + pp[1] + "\n";
             }
           }
 
-          new_applet += holden + "\n";
-          console.log("comp", Number.parseInt(src_screen), Number.parseInt(dst_screen), Number.parseInt(src_screen) > Number.parseInt(dst_screen));
+          newApplet += holden + "\n";
+          // console.log("comp", Number.parseInt(srcScreen), Number.parseInt(dstScreen), Number.parseInt(srcScreen) > Number.parseInt(dstScreen));
         }
       }
 
-      new_applet += "\n";
+      newApplet += "\n";
     } else {
-      if (par.config.length > 2 && par.config[0] === "Containments" && par.config[1] === src_screen && par.config[2] === "Applets") {
-        par.config[1] = dst_screen;
+      if (par.config.length > 2 && par.config[0] === "Containments" && par.config[1] === srcScreen && par.config[2] === "Applets") {
+        par.config[1] = dstScreen;
 
-        if (Number.parseInt(src_screen) > Number.parseInt(dst_screen)) {
-          new_applet += build_conf(par);
+        if (Number.parseInt(srcScreen) > Number.parseInt(dstScreen)) {
+          newApplet += buildConf(par);
         } else {
-          holden += build_conf(par);
+          holden += buildConf(par);
         }
       } else {
-        new_applet += build_conf(par);
+        newApplet += buildConf(par);
 
-        if (stop && par.config.length > 1 && par.config[1] !== dst_screen) {
-          forwarded += new_applet;
+        if (stop && par.config.length > 1 && par.config[1] !== dstScreen) {
+          forwarded += newApplet;
           stop = true;
-          new_applet = "";
+          newApplet = "";
         }
       }
     }
   }
+}
+
+
+function countsApplets(content, screen=0) {
+  var parsed = parseFile(content.split("\n\n"))
+  var i = 0;
+  for (var  _pj_c = 0; _pj_c < parsed.length; _pj_c += 1) {
+    var par = parsed[_pj_c];
+    if (par.config == null) continue;
+    if (par.config.length > 2 && par.config[0] === "Containments" && par.config[1] == screen + 1 && par.type == 1) {
+      // console.log("Screen", par.config[1])
+      i++;
+    }
+  }
+  return i;
 }

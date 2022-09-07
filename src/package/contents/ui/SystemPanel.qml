@@ -56,6 +56,7 @@ Item {
         // console.log("2al7it", data)
         systemPanelPlugin.write_file(data)
     }
+    
     function screenInfo() {
         var plugin = getSystemPanelPlugin()
         // plugin.homeDirectory()
