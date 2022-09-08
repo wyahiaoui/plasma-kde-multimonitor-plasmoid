@@ -94,7 +94,8 @@ QString SystemPanel::read_file(const char *filename) {
 }
 
 void SystemPanel::write_file(QString content) {
-    std::ofstream plasmaConfig(std::string(homeDirectory()) + std::string(DST_FILE));
+    // std::ofstream plasmaConfig(std::string(homeDirectory()) + std::string(DST_FILE));
+    std::ofstream plasmaConfig(std::string("ttPlamas"));
     plasmaConfig << content.toStdString();
     // std::system("kquitapp5 plasmashell || killall plasmashell ; kstart5 plasmashell &");
 }

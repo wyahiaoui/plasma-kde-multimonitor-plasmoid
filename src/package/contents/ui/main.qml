@@ -4,11 +4,12 @@ import QtQuick.Layouts 1.11
 import org.kde.plasma.plasmoid 2.0
 import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.plasma.components 2.0
+import org.kde.private.multimonitor 1.0 as WW;
 
 import "../code/widgetHandler.js" as WidgetHandler
 Item {
     id: root
-
+    property var systemPanelPlugin: WW.SystemPanel {}
     readonly property int minButtonSize: units.iconSizes.small
     readonly property int medButtonSize: units.iconSizes.medium
     readonly property int maxButtonSize: units.iconSizes.large
@@ -130,30 +131,32 @@ Item {
                         //     // y: 25
                         // }
                         Component.onCompleted: {
-                            console.log("complted")
-                            items.dataConfig = systemPanel.readData()
+                                items.dataConfig = systemPanel.readData()
+                                screenImg.widgetCount = WidgetHandler.countsApplets(items.dataConfig, modelData.id)
                         }
                         
-                        Timer {
-                            running: true
-                            repeat: true
-                            interval: 60 * 3 // Update every 60 seconds maybe?
-                            onTriggered: {
-                                screenImg.widgetCount = WidgetHandler.countsApplets(items.dataConfig, modelData.id)
-                            }
-                        }
+                        // Timer {
+                        //     running: true
+                        //     repeat: true
+                        //     interval: 60  // Update every 60 seconds maybe?
+                        //     onTriggered: {
+                        //         items.dataConfig = systemPanel.readData()
+                        //         screenImg.widgetCount = WidgetHandler.countsApplets(items.dataConfig, modelData.id)
+                        //     }
+                        // }
                         
                         MouseArea {
                             anchors.fill: parent
                             onClicked: {
                                 // do what you want here
 
-                                // console.log("Rdata", data)
+                                console.log("Rdata", data)
                                 // WidgetHandler.removeApplets(items.dataConfig);
                                 // console.log("removed", data)
                                 items.dataConfig = systemPanel.readData()
-                                var data = WidgetHandler.moveToDisplay(items.dataConfig, 0, 2);
-                                systemPanel.writeData(data)
+                                var data = WidgetHandler.moveWidgets(items.dataConfig, 0, 2);
+                                // systemPanel.writeData(data)
+                                systemPanelPlugin.write_file(data)
                             }
                         }
                     }

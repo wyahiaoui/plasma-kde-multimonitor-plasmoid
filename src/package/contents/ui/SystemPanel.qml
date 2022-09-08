@@ -52,10 +52,10 @@ Item {
         return data
     }
 
-    function writeData(data) {
-        // console.log("2al7it", data)
-        systemPanelPlugin.write_file(data)
-    }
+    // function writeData(data) {
+    //     // console.log("2al7it", data)
+    //     systemPanelPlugin.write_file(data)
+    // }
     
     function screenInfo() {
         var plugin = getSystemPanelPlugin()
