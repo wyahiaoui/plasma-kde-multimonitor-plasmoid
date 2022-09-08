@@ -48,7 +48,7 @@ Item {
 
     function readData() {
         var data = systemPanelPlugin.read_file()
-        systemPanelPlugin.write_file(data)
+        // systemPanelPlugin.write_file(data)
         return data
     }
 

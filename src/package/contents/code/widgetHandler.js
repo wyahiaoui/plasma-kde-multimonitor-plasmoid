@@ -150,7 +150,6 @@ function _moveToDisplay(content, srcScreen, dstScreen) {
 
     newApplet += "\n";
   }
-  console.log("neew", newApplet)
   return newApplet;
 }
 
@@ -165,16 +164,15 @@ function moveWidgets(content, srcScreen, dstScreen) {
   for (var _pj_c = 0; _pj_c < parsed.length; _pj_c += 1) {
     if (parsed[_pj_c] == null) continue;
     if (parsed[_pj_c].config.length === 2 && parsed[_pj_c].config[0] === "Containments" && (parsed[_pj_c].config[1] == srcScreen + 1 || parsed[_pj_c].config[1] == dstScreen + 1  )) {
-      // console.log("adljd", parsed[_pj_c].attributes.length)
       var attributes = parsed[_pj_c].attributes
       if  (parsed[_pj_c].config[1] == srcScreen + 1)
         for (var _pj_f = 0; _pj_f < attributes.length; _pj_f += 1) {
           var att = attributes[_pj_f];
-          console.log("aartlrj", att);
-            if ((att[0].indexOf("ItemGeometries")) == 0) {
-              geo.push(parsed[_pj_c].attributes.splice(_pj_f, 1))
-              _pj_f--;
-            } 
+          if ((att[0].indexOf("ItemGeometries")) == 0) {
+            var newGeo = parsed[_pj_c].attributes.splice(_pj_f, 1)[0]
+            geo.push([newGeo[0], newGeo[1]])
+            _pj_f--;
+          } 
         }
       else {
         for (const tt in parsed[_pj_c].attributes) {
@@ -187,16 +185,12 @@ function moveWidgets(content, srcScreen, dstScreen) {
     else if (parsed[_pj_c].config.length > 2 && parsed[_pj_c].config[0] === "Containments" && parsed[_pj_c].config[1] == srcScreen + 1 && parsed[_pj_c].config[2] === "Applets") {
       parsed[_pj_c].config[1] = dstScreen + 1;
     }
-  }
-  parsed.sort((a, b) => (a.config.length > 2 || a.config[1] > b.config[1]) ? a.config[1] - b.config[1]: -1)
+  } 
+  parsed.sort((a, b) => ((a.config.length > 2 || a.config[1] > b.config[1]) ) ? a.config[1] - b.config[1]: -1)
   var new_applet = ""
   for (var pp = 0; pp < parsed.length; pp++) {
-    // console.log("papapapaap", parsed[pp])
     if (parsed[pp] == null) continue;
-    // console.log("parsed", buildConf(parsed[pp]))
     new_applet += buildConf(parsed[pp]);
-    // if (pp == 4)
-    //   break;
   }
   return new_applet
 }
@@ -244,8 +238,6 @@ function _moveWidgets(content, srcScreen, dstScreen) {
           }
 
           newApplet += holden + "\n";
-          // console.log("neeew", newApplet)
-          // console.log("comp", Number.parseInt(srcScreen), Number.parseInt(dstScreen), Number.parseInt(srcScreen) > Number.parseInt(dstScreen));
         }
       }
 
@@ -258,7 +250,6 @@ function _moveWidgets(content, srcScreen, dstScreen) {
           newApplet += buildConf(par);
         } else {
           holden += buildConf(par);
-          console.log("hold", holden)
         }
       } else {
         newApplet += buildConf(par);
