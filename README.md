@@ -12,3 +12,5 @@ This is a plasmoid to handle the widget with multiple monitor. It allows configu
 - `source prefix.sh`
 - `make -j$(nproc) && (sudo) make install`
 
+## Remove
+- `(sudo) xargs rm < install_manifest.txt`

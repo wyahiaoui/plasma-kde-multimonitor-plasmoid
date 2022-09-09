@@ -2,6 +2,8 @@
 #include <libudev.h>
 #include <stdexcept>
 #include <iostream>
+// https://stackoverflow.com/questions/34804423/qt-dbus-not-receiving-signals
+// https://stackoverflow.com/questions/22592042/qt-dbus-monitor-method-calls
 
 udev* hotplug;
 udev_monitor* hotplug_monitor;

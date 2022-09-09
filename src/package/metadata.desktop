@@ -7,7 +7,7 @@ Comment=Plasma5 applet that arrange applet with multiscreen
 Comment[fr]=Applet Plasma5 qui arrange les applet dans les multiécran
 Comment[de]=Plasma5-widget die Panels verwalt wenn multimonitor vorhanden wäre
 
-Icon=system-shutdown
+Icon=screenruler
 Type=Service
 ServiceTypes=Plasma/Applet
 

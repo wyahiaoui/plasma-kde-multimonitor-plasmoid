@@ -99,7 +99,8 @@ Item {
                     Layout.fillWidth: true
                     visible: true
                     fillMode: Image.PreserveAspectFit
-                    source: "../../../image/computer-screen-svgrepo-com.svg"
+                    source: "../images/computer-screen-svgrepo-com.svg"
+                    // source: "contents/images/computer-screen-svgrepo-com.svg"
                     width: modelData.width / 30
                     height: modelData.height / 30
                     y: Math.floor(modelData.y)
@@ -126,6 +127,7 @@ Item {
  
                     Component.onCompleted: {
                             items.dataConfig = systemPanel.readData()
+
                             screenImg.widgetCount = WidgetHandler.ParseCountsApplets(items.dataConfig, modelData.id)
                     }
                     

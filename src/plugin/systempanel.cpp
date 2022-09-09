@@ -3,6 +3,8 @@
 #include "systempanel.h"
 #include <iostream>
 
+#include "dbusUtility.h"
+
 
 static bool compareScreen(ScreenParams i1, ScreenParams i2)
 {
@@ -97,7 +99,21 @@ void SystemPanel::write_file(QString content) {
     std::ofstream plasmaConfig(std::string(homeDirectory()) + std::string(DST_FILE));
     // std::ofstream plasmaConfig(std::string("ttPlamas"));
     plasmaConfig << content.toStdString();
-
+    dBusPlasmaRefrech();
     // std::system("kquitapp5 plasmashell || killall plasmashell");
     // std::system("kstart5 plasmashell");
+    // std::system("qdbus org.kde.plasmashell /PlasmaShell org.kde.PlasmaShell.refreshCurrentShell");
+}
+
+
+int lid_state() {
+    // dbus-send --session --dest=org.freedesktop.DBus --type=method_call --print-reply /org/freedesktop/DBus org.freedesktop.DBus.ListNames
+    // qdbusviewer
+    // https://sleeplessbeastie.eu/2013/02/26/how-to-automate-kde-using-d-bus/
+    //  cat /proc/acpi/button/lid/LID/state 
+    // qdbus org.kde.Solid.PowerManagement /org/kde/Solid/PowerManagement isLidClosed
+    // qdbus org.kde.KScreen /backend getConfig
+    // less /sys/firmware/acpi/interrupts/sci
+    // udevadm monitor
+    return 0;
 }
