@@ -115,51 +115,29 @@ function buildConf(par) {
 
 
 
-function _moveToDisplay(content, srcScreen, dstScreen) {
-  var config, line, newApplet;
-  newApplet = "";
-  content = content.split("\n\n")
-  srcScreen += 1;
-  dstScreen += 1;
-  for (var  _pj_c = 0; _pj_c < content.length; _pj_c += 1) {
-    var conf = content[_pj_c];
-
-    for (var _pj_f = 0, _pj_d = conf.split("\n"); _pj_f < _pj_d.length; _pj_f += 1) {
-      var line = _pj_d[_pj_f];
-
-      if (line === "") {
-        continue;
-      }
-
-      if (line[0] === "[") {
-        config = line.slice(1, -1).split("][");
-
-        if (config.length > 2) {
-
-          if (config[1] === srcScreen.toString() && config[2] === "Applets") {
-            config[1] = dstScreen.toString();
-            line = "[" + config.join("][") + "]";
-          }
-        }
-
-        newApplet += line + "\n";
-      } else {
-        newApplet += line + "\n";
-      }
-    }
-
-    newApplet += "\n";
-  }
-  return newApplet;
-}
-
 function buildConfFromArray(parsed) {
-
+  var new_applet = ""
+  parsed.sort((a, b) => ((a.config.length > 2 || a.config[1] > b.config[1]) ) ? a.config[1] - b.config[1]: -1)
+  for (var pp = 0; pp < parsed.length; pp++) {
+    if (parsed[pp] == null) continue;
+    new_applet += buildConf(parsed[pp]);
+  }
+  return new_applet;
 }
 
-function moveWidgets(content, srcScreen, dstScreen) {
+
+function build_container(attributes, geo) {
+  for (const tt in attributes) {
+    if (attributes[tt][0].indexOf("ItemGeometries") == 0) continue;
+    geo.push(attributes[tt]);
+  }
+  return geo
+}
+function moveWidgets(model, content, srcScreen, dstScreen) {
   var geo = [];
+  console.log("MODEEL", model)
   content = content.split("\n\n");
+  var marked = -1;
   var parsed = parseFile(content);
   for (var _pj_c = 0; _pj_c < parsed.length; _pj_c += 1) {
     if (parsed[_pj_c] == null) continue;
@@ -174,108 +152,51 @@ function moveWidgets(content, srcScreen, dstScreen) {
             _pj_f--;
           } 
         }
+      else if (srcScreen < dstScreen) {
+        parsed[_pj_c].attributes = build_container(parsed[_pj_c].attributes, geo); 
+      }
       else {
-        for (const tt in parsed[_pj_c].attributes) {
-          if (parsed[_pj_c].attributes[tt][0].indexOf("ItemGeometries") == 0) continue;
-          geo.push(parsed[_pj_c].attributes[tt]);
-        }
-        parsed[_pj_c].attributes = geo; 
+        marked = _pj_c;
       }
     }
     else if (parsed[_pj_c].config.length > 2 && parsed[_pj_c].config[0] === "Containments" && parsed[_pj_c].config[1] == srcScreen + 1 && parsed[_pj_c].config[2] === "Applets") {
       parsed[_pj_c].config[1] = dstScreen + 1;
     }
   } 
-  parsed.sort((a, b) => ((a.config.length > 2 || a.config[1] > b.config[1]) ) ? a.config[1] - b.config[1]: -1)
-  var new_applet = ""
-  for (var pp = 0; pp < parsed.length; pp++) {
-    if (parsed[pp] == null) continue;
-    new_applet += buildConf(parsed[pp]);
+  if (marked > -1) {
+    parsed[marked].attributes = build_container(parsed[marked].attributes, geo);
   }
-  return new_applet
-}
-
-function _moveWidgets(content, srcScreen, dstScreen) {
-  var forwarded, geo, holden, newApplet, parsed, stop;
-  newApplet = "";
-  forwarded = "";
-  content = content.split("\n\n");
-  parsed = parseFile(content);
-
-  holden = "";
-  geo = "";
-  stop = false;
-  for (var  _pj_c = 0; _pj_c < parsed.length; _pj_c += 1) {
-    var par = parsed[_pj_c];
-    
-    if (par.config == null) continue;
-    if (par.config.length === 2 && par.config[0] === "Containments" && (par.config[1] == dstScreen + 1 || par.config[1] == srcScreen + 1)) {
-      if (par.config[1] == srcScreen + 1) {
-        newApplet += "[" + par.config.join("][") + "]\n";
-        for (var _pj_f = 0; _pj_f < par.attributes.length; _pj_f += 1) {
-          var att = par.attributes[_pj_f];
-          if ((att[0].indexOf("ItemGeometries")) != 0) {
-            newApplet += att[0] + "=" + att[1] + "\n";
-          } else {
-            geo += att[0] + "=" + att[1] + "\n";
-          }
-        }
-
-        newApplet += "\n";
-
-      if (Number.parseInt(srcScreen) > Number.parseInt(dstScreen)) {
-          stop = true;
-      }
-      } else {
-        if (par.config[1] == dstScreen + 1) {
-          newApplet += "[" + par.config.join("][") + "]\n";
-          newApplet += geo;
-          for (var pp, _pj_f = 0, _pj_d = par.attributes, _pj_e = _pj_d.length; _pj_f < _pj_e; _pj_f += 1) {
-            pp = _pj_d[_pj_f];
-            if (pp[0].indexOf("ItemGeometries") != 0) {
-              newApplet += pp[0] + "=" + pp[1] + "\n";
-            }
-          }
-
-          newApplet += holden + "\n";
-        }
-      }
-
-      newApplet += "\n";
-    } else {
-      if (par.config.length > 2 && par.config[0] === "Containments" && par.config[1] == srcScreen + 1 && par.config[2] === "Applets") {
-        par.config[1] = dstScreen + 1;
-
-        if (Number.parseInt(srcScreen) < Number.parseInt(dstScreen)) {
-          newApplet += buildConf(par);
-        } else {
-          holden += buildConf(par);
-        }
-      } else {
-        newApplet += buildConf(par);
-
-        if (stop && par.config.length > 1 && par.config[1] != dstScreen + 1) {
-          forwarded += newApplet + holden;
-          stop = true;
-          newApplet = "";
-        }
-      }
-    }
-  }
-  return forwarded + newApplet
+  return buildConfFromArray(parsed)
 }
 
 
-function countsApplets(content, screen=0) {
-  var parsed = parseFile(content.split("\n\n"))
+function CountApplets(parsed, screen=0) {
   var i = 0;
   for (var  _pj_c = 0; _pj_c < parsed.length; _pj_c += 1) {
     var par = parsed[_pj_c];
     if (par.config == null) continue;
     if (par.config.length > 2 && par.config[0] === "Containments" && par.config[1] == screen + 1 && par.type == 1) {
-      // console.log("Screen", par.config[1])
       i++;
     }
   }
   return i;
+}
+
+function ParseCountsApplets(content, screen=0) {
+  var parsed = parseFile(content.split("\n\n"))
+  return CountApplets(parsed, screen);
+}
+
+function mostApplets(content, screens_count) {
+  var max = 0;
+  var index = 0;
+  var parsed = parseFile(content.split("\n\n"))
+  for (var i = 0; i < screens_count; i++) {
+    var tmp = CountApplets(parsed, i)
+    if (tmp  > max) {
+      max = tmp;
+      index = i; 
+    }
+  }
+  return index;
 }

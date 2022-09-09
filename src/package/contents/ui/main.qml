@@ -13,7 +13,6 @@ Item {
     readonly property int minButtonSize: units.iconSizes.small
     readonly property int medButtonSize: units.iconSizes.medium
     readonly property int maxButtonSize: units.iconSizes.large
-
     Layout.minimumWidth: minButtonSize * itemGrid.columns
     Layout.minimumHeight: minButtonSize * itemGrid.rows
 
@@ -54,9 +53,8 @@ Item {
     
     Grid {
         id: itemGrid
-        property string vmPlaceHolder: WidgetHandler.countsApplets(items.dataConfig)
+        property int vmPlaceHolder: WidgetHandler.mostApplets(items.dataConfig, items.model.length)
         readonly property int numVisibleButtons: (visibleChildren.length - 1)
-        
         rows: {
             var value = plasmoid.configuration.rows
             if(plasmoid.configuration.inlineBestFit){
@@ -96,7 +94,7 @@ Item {
             delegate: 
                 Image {
                     id: screenImg
-                    property int widgetCount: 0
+                    property int widgetCount: widgetCount = WidgetHandler.countsApplets(items.dataConfig, modelData.id)
                     Layout.fillHeight: true
                     Layout.fillWidth: true
                     visible: true
@@ -106,21 +104,29 @@ Item {
                     height: modelData.height / 30
                     y: Math.floor(modelData.y)
                     Label {
+                        text: modelData.width + "x" + modelData.height 
+                        // x: 10
+                        font.pointSize: 6
+                        x: 10
+                        y: -15
+
+                    }
+                    Label {
                         text: modelData.id
+                        x: -4
+                        font.pointSize: 10
                     }
                     
                     Label {
                         text: screenImg.widgetCount
+                        x: -4
                         y: 10
+                        font.pointSize: 10
                     }   
-                    // Label {
-                    //     text: modelData.width + "x" + modelData.height 
-                    //     // x: 10
-                    //     // y: 25
-                    // }
+ 
                     Component.onCompleted: {
                             items.dataConfig = systemPanel.readData()
-                            screenImg.widgetCount = WidgetHandler.countsApplets(items.dataConfig, modelData.id)
+                            screenImg.widgetCount = WidgetHandler.ParseCountsApplets(items.dataConfig, modelData.id)
                     }
                     
                     // Timer {
@@ -136,14 +142,9 @@ Item {
                     MouseArea {
                         anchors.fill: parent
                         onClicked: {
-                            // do what you want here
 
-                            console.log("Rdata", data)
-                            // WidgetHandler.removeApplets(items.dataConfig);
-                            // console.log("removed", data)
                             items.dataConfig = systemPanel.readData()
-                            var data = WidgetHandler.moveWidgets(items.dataConfig, 0, 2);
-                            // systemPanel.writeData(data)
+                            var data = WidgetHandler.moveWidgets(items.model, items.dataConfig, itemGrid.vmPlaceHolder + 0, modelData.id);
                             systemPanelPlugin.write_file(data)
                         }
                     }
@@ -152,10 +153,28 @@ Item {
             // }
         }
         TextInput {
+            id: most
             text: itemGrid.vmPlaceHolder
             color: "white"
         }
 
+        // ComboBox {
+        //     editable: true
+        //     model: ListModel {
+        //         id: cbItems
+        //         ListElement { text: "Banana"; color: "Yellow" }
+        //         ListElement { text: "Apple"; color: "Green" }
+        //         ListElement { text: "Coconut"; color: "Brown" }
+        //     }
+        //     currentIndex:  itemGrid.vmPlaceHolder
+        //     Component.onCompleted: {
+        //         __style.textColor = "black"
+        //     }
+        //     onAccepted: {
+        //         if (find(editText) === -1)
+        //             model.append({text: editText})
+        //     }
+        // }
         // }
     }
     
