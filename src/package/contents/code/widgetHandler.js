@@ -125,6 +125,21 @@ function buildConfFromArray(parsed) {
   return new_applet;
 }
 
+function scaleElements(applets, scale) {
+  var conf = applets.split(";")
+  var newApplet = ""
+  for (const ff of conf.slice(0, conf.length - 1)) {
+    var appletConf = ff.split(":");
+
+    newApplet += appletConf[0] + ":"
+    var measures = appletConf[1].split(",")
+    for (var i = 0; i < measures.length; i++) {
+      newApplet +=  (Math.floor(measures[i] * scale)) + ",";  
+    }
+    newApplet += ";"
+  }
+  return newApplet
+}
 
 function build_container(attributes, geo) {
   for (const tt in attributes) {
@@ -135,7 +150,8 @@ function build_container(attributes, geo) {
 }
 function moveWidgets(model, content, srcScreen, dstScreen) {
   var geo = [];
-  console.log("MODEEL", model)
+  const scale = (model.find(x => x.id == srcScreen).width * model.find(x => x.id == srcScreen).height * 1.0) / (model.find(x => x.id == dstScreen).width * model.find(x => x.id == dstScreen).height)
+  console.log("scale um ", model, scale);
   content = content.split("\n\n");
   var marked = -1;
   var parsed = parseFile(content);
@@ -148,6 +164,7 @@ function moveWidgets(model, content, srcScreen, dstScreen) {
           var att = attributes[_pj_f];
           if ((att[0].indexOf("ItemGeometries")) == 0) {
             var newGeo = parsed[_pj_c].attributes.splice(_pj_f, 1)[0]
+            scaleElements(newGeo[1], scale)
             geo.push([newGeo[0], newGeo[1]])
             _pj_f--;
           } 
