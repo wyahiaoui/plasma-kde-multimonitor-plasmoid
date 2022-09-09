@@ -268,8 +268,8 @@ Image=file:///home/wissem/.local/share/wallpapers/Sweet-Wallpapers/Sweet-space.p
 SlidePaths=/home/wissem/.local/share/wallpapers,/usr/share/wallpapers
 
 [Containments][2]
-ItemGeometries-1680x1050=Applet-16:224,64,320,320,0;Applet-15:1088,64,464,256,0;
-ItemGeometriesHorizontal=Applet-16:224,64,320,320,0;Applet-15:1088,64,464,256,0;
+ItemGeometries-1680x1050=
+ItemGeometriesHorizontal=
 ItemGeometriesVertical=Applet-16:224,64,320,320,0;Applet-15:1088,64,464,256,0;
 activityId=2fdd0dd5-7d2f-440e-8507-87cfcf06e0e5
 formfactor=0
@@ -278,42 +278,6 @@ lastScreen=3
 location=0
 plugin=org.kde.plasma.folder
 wallpaperplugin=org.kde.image
-
-[Containments][2][Applets][15]
-immutability=1
-plugin=org.kde.plasma.systemmonitor
-
-[Containments][2][Applets][15][Configuration][Appearance]
-chartFace=org.kde.ksysguard.processtable
-
-[Containments][2][Applets][15][Configuration][ConfigDialog]
-DialogHeight=540
-DialogWidth=720
-
-[Containments][2][Applets][15][Configuration][org.kde.ksysguard.processtable][General]
-columnWidths=0.25,0.125,0.18313253012048192,0.125,0.125,0.125,0.125
-sortColumn=usage
-
-[Containments][2][Applets][16]
-immutability=1
-plugin=org.kde.plasma.weather
-
-[Containments][2][Applets][16][Configuration]
-pressureUnit=5028
-showHumidityInTooltip=true
-showPressureInTooltip=true
-showTemperatureInCompactMode=true
-showTemperatureInTooltip=true
-showWindInTooltip=true
-source=wettercom|weather|Berlin, Berlin, DE|DE0001020;Berlin
-speedUnit=9001
-temperatureUnit=6001
-updateInterval=30
-visibilityUnit=2007
-
-[Containments][2][Applets][16][Configuration][ConfigDialog]
-DialogHeight=540
-DialogWidth=720
 
 [Containments][2][ConfigDialog]
 DialogHeight=480
@@ -325,7 +289,6 @@ PreloadWeight=26
 [Containments][2][General]
 ToolBoxButtonState=topcenter
 ToolBoxButtonX=312
-ToolBoxButtonY=43
 showToolbox=false
 
 [Containments][2][Wallpaper][org.kde.image][General]
@@ -377,6 +340,9 @@ wallpaperplugin=org.kde.image
 DialogHeight=540
 DialogWidth=720
 
+[Containments][4][Configuration]
+PreloadWeight=10
+
 [Containments][4][Wallpaper][org.kde.image][General]
 Image=file:///usr/share/wallpapers/Flow/contents/images/5120x2880.jpg
 SlidePaths=/home/wissem/.local/share/wallpapers,/usr/share/wallpapers
@@ -404,4 +370,4 @@ PreloadWeight=42
 
 [ScreenMapping]
 itemsOnDisabledScreens=
-screenMapping=desktop:/Omnisphere.desktop,0,2fdd0dd5-7d2f-440e-8507-87cfcf06e0e5,desktop:/ASIO4ALL v2 Instruction Manual.lnk,0,2fdd0dd5-7d2f-440e-8507-87cfcf06e0e5,desktop:/FL Studio 20 (32bit).desktop,0,2fdd0dd5-7d2f-440e-8507-87cfcf06e0e5,desktop:/brave-agimnkijcaahngcdmfeangaknmldooml-Default.desktop,0,2fdd0dd5-7d2f-440e-8507-87cfcf06e0e5,desktop:/ASIO4ALL v2 Instruction Manual.desktop,0,2fdd0dd5-7d2f-440e-8507-87cfcf06e0e5,desktop:/peakpx.jpg,0,2fdd0dd5-7d2f-440e-8507-87cfcf06e0e5
+screenMapping=desktop:/FL Studio 20 (32bit).desktop,0,2fdd0dd5-7d2f-440e-8507-87cfcf06e0e5,desktop:/Omnisphere.desktop,0,2fdd0dd5-7d2f-440e-8507-87cfcf06e0e5,desktop:/brave-agimnkijcaahngcdmfeangaknmldooml-Default.desktop,0,2fdd0dd5-7d2f-440e-8507-87cfcf06e0e5,desktop:/peakpx.jpg,0,2fdd0dd5-7d2f-440e-8507-87cfcf06e0e5,desktop:/ASIO4ALL v2 Instruction Manual.lnk,0,2fdd0dd5-7d2f-440e-8507-87cfcf06e0e5,desktop:/ASIO4ALL v2 Instruction Manual.desktop,0,2fdd0dd5-7d2f-440e-8507-87cfcf06e0e5

@@ -125,7 +125,10 @@ function buildConfFromArray(parsed) {
   return new_applet;
 }
 
-function scaleElements(applets, scale) {
+function scaleElements(applets, srcModel, dstModel) {
+
+  const scale = (dstModel.width * 1.0) / (srcModel.width )
+  console.log("scale um ", scale, srcModel, dstModel);
   var conf = applets.split(";")
   var newApplet = ""
   for (const ff of conf.slice(0, conf.length - 1)) {
@@ -134,9 +137,9 @@ function scaleElements(applets, scale) {
     newApplet += appletConf[0] + ":"
     var measures = appletConf[1].split(",")
     for (var i = 0; i < measures.length; i++) {
-      newApplet +=  (Math.floor(measures[i] * scale)) + ",";  
+      newApplet +=  (Math.round(measures[i] * scale )) + ",";  
     }
-    newApplet += ";"
+    newApplet = newApplet.slice(0, -1) + ";"
   }
   return newApplet
 }
@@ -150,8 +153,8 @@ function build_container(attributes, geo) {
 }
 function moveWidgets(model, content, srcScreen, dstScreen) {
   var geo = [];
-  const scale = (model.find(x => x.id == srcScreen).width * model.find(x => x.id == srcScreen).height * 1.0) / (model.find(x => x.id == dstScreen).width * model.find(x => x.id == dstScreen).height)
-  console.log("scale um ", model, scale);
+  const srcModel = model.find(x => x.id == srcScreen)
+  const dstModel = model.find(x => x.id == dstScreen)
   content = content.split("\n\n");
   var marked = -1;
   var parsed = parseFile(content);
@@ -164,7 +167,8 @@ function moveWidgets(model, content, srcScreen, dstScreen) {
           var att = attributes[_pj_f];
           if ((att[0].indexOf("ItemGeometries")) == 0) {
             var newGeo = parsed[_pj_c].attributes.splice(_pj_f, 1)[0]
-            scaleElements(newGeo[1], scale)
+            newGeo[1] = scaleElements(newGeo[1], srcModel, dstModel)
+            console.log("inco", newGeo[1]);
             geo.push([newGeo[0], newGeo[1]])
             _pj_f--;
           } 
@@ -178,7 +182,17 @@ function moveWidgets(model, content, srcScreen, dstScreen) {
     }
     else if (parsed[_pj_c].config.length > 2 && parsed[_pj_c].config[0] === "Containments" && parsed[_pj_c].config[1] == srcScreen + 1 && parsed[_pj_c].config[2] === "Applets") {
       parsed[_pj_c].config[1] = dstScreen + 1;
+      if (parsed[_pj_c].config.length > 3 && parsed[_pj_c].config[2] == "Applets" && parsed[_pj_c].config[4] == "Configuration" && 1) {
+        for (var i = 0; i < parsed[_pj_c].attributes.length; i++) {
+          if (["Weight", "Height", "Width"].some(sub => parsed[_pj_c].attributes[i][0].includes(sub))) {
+            parsed[_pj_c].attributes[i][1] = Math.round(parsed[_pj_c].attributes[i][1] * ((srcModel.width * 1.0) / dstModel.width ))
+            console.log("parsed[_pj_c].attributes", parsed[_pj_c].attributes[i][1])
+          }
+            
+        }
+      }
     }
+    
   } 
   if (marked > -1) {
     parsed[marked].attributes = build_container(parsed[marked].attributes, geo);

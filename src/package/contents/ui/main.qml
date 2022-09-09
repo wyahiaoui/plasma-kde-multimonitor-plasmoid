@@ -142,10 +142,12 @@ Item {
                     MouseArea {
                         anchors.fill: parent
                         onClicked: {
-
-                            items.dataConfig = systemPanel.readData()
-                            var data = WidgetHandler.moveWidgets(items.model, items.dataConfig, itemGrid.vmPlaceHolder + 0, modelData.id);
-                            systemPanelPlugin.write_file(data)
+                            if ((0 + itemGrid.vmPlaceHolder) != modelData.id) {
+                                console.log("ldldl", (itemGrid.vmPlaceHolder), modelData.id, itemGrid.vmPlaceHolder + 0 != modelData.id)
+                                items.dataConfig = systemPanel.readData()
+                                var data = WidgetHandler.moveWidgets(items.model, items.dataConfig, itemGrid.vmPlaceHolder + 0, modelData.id);
+                                systemPanelPlugin.write_file(data)
+                            }
                         }
                     }
                 }
