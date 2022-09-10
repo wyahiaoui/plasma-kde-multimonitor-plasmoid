@@ -17,11 +17,11 @@ SystemPanel::SystemPanel(QObject *parent) : QObject(parent) {
 SystemPanel::~SystemPanel() {
 }
 
-int SystemPanel::turnOffScreen(){
+int SystemPanel::refresh(){
     
-    const int result = system("/usr/bin/xset dpms force off");
+    dBusPlasmaRefrech();
     
-    return result;
+    return 0;
 }
 
 int SystemPanel::monitorCount(){
@@ -95,16 +95,29 @@ QString SystemPanel::read_file(const char *filename) {
     return QString::fromUtf8(str.c_str());
 }
 
-void SystemPanel::write_file(QString content) {
-    std::ofstream plasmaConfig(std::string(homeDirectory()) + std::string(DST_FILE));
-    // std::ofstream plasmaConfig(std::string("ttPlamas"));
+static void write_file(QString content, const char *filename) {
+    std::ofstream plasmaConfig;
+    std::cout << "FILENAMAM";
+    if (filename != nullptr)
+        plasmaConfig = std::ofstream(std::string(filename));
+    else 
+        plasmaConfig = std::ofstream(std::string(homeDirectory()) + std::string(DST_FILE));
     plasmaConfig << content.toStdString();
-    dBusPlasmaRefrech();
-    // std::system("kquitapp5 plasmashell || killall plasmashell");
-    // std::system("kstart5 plasmashell");
-    // std::system("qdbus org.kde.plasmashell /PlasmaShell org.kde.PlasmaShell.refreshCurrentShell");
+
 }
 
+void SystemPanel::write_fileRefresh(QString content, const char *filename) {
+    write_file(content, filename);
+    // qdbus org.kde.plasmashell /PlasmaShell org.kde.PlasmaShell.refreshCurrentShell
+
+    dBusPlasmaRefrech();
+}
+
+void SystemPanel::write_fileDst(QString content, QString filename) {
+    std::string currentDir(getcwd(NULL, 0));
+    std::cout << "fir" << (currentDir + filename.toStdString()).c_str() << std::endl; 
+    write_file(content, (currentDir + filename.toStdString()).c_str());
+}
 
 int lid_state() {
     // dbus-send --session --dest=org.freedesktop.DBus --type=method_call --print-reply /org/freedesktop/DBus org.freedesktop.DBus.ListNames

@@ -74,11 +74,12 @@ public:
     ~SystemPanel();
     // Q_INVOKABLE 
 public Q_SLOTS:
-    int turnOffScreen();
+    int refresh();
     int monitorCount();
     std::vector<ScreenParams> screenInfo();
     QString read_file(const char *filename =  DST_FILE);
-    void write_file(QString content);
+    void write_fileRefresh(QString content, const char *filename =  nullptr);
+    void write_fileDst(QString content, QString filename);
 };
 
 #endif

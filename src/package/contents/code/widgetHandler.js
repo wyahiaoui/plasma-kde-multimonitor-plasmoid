@@ -186,7 +186,6 @@ function moveWidgets(model, content, srcScreen, dstScreen) {
         for (var i = 0; i < parsed[_pj_c].attributes.length; i++) {
           if (["Weight", "Height", "Width"].some(sub => parsed[_pj_c].attributes[i][0].includes(sub))) {
             parsed[_pj_c].attributes[i][1] = Math.round(parsed[_pj_c].attributes[i][1] * ((srcModel.width * 1.0) / dstModel.width ))
-            console.log("parsed[_pj_c].attributes", parsed[_pj_c].attributes[i][1])
           }
             
         }
@@ -206,7 +205,7 @@ function CountApplets(parsed, screen=0) {
   for (var  _pj_c = 0; _pj_c < parsed.length; _pj_c += 1) {
     var par = parsed[_pj_c];
     if (par.config == null) continue;
-    if (par.config.length > 2 && par.config[0] === "Containments" && par.config[1] == screen + 1 && par.type == 1) {
+    if (par.config.length == 4 && par.config[0] === "Containments" && par.config[1] == screen + 1 && par.type == 1) {
       i++;
     }
   }

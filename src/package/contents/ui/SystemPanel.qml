@@ -28,19 +28,24 @@ Item {
         return systemPanelPlugin
     }
     
-    function turnOffScreen() {
+    // function turnOffScreen() {
         
-        var plugin = getSystemPanelPlugin()
-        if (plugin) {
-            var result = plugin.turnOffScreen()
-            if(result !=0){
-                console.error("plugin.turnOffScreen() returned error code=", result)
-            }
+    //     var plugin = getSystemPanelPlugin()
+    //     if (plugin) {
+    //         var result = plugin.turnOffScreen()
+    //         if(result !=0){
+    //             console.error("plugin.turnOffScreen() returned error code=", result)
+    //         }
             
-        } else {
-            console.exception('ERROR: Turning off screen - SystemPanel plugin not available')
-        }
+    //     } else {
+    //         console.exception('ERROR: Turning off screen - SystemPanel plugin not available')
+    //     }
+    // }
+
+    function refresh() {
+        getSystemPanelPlugin().refresh()
     }
+
     function home() {
         var plugin = getSystemPanelPlugin()
         return plugin.homeDirectory()
@@ -52,10 +57,11 @@ Item {
         return data
     }
 
-    // function writeData(data) {
-    //     // console.log("2al7it", data)
-    //     systemPanelPlugin.write_file(data)
-    // }
+    function writeData(data) {
+        // console.log("2al7it", data)
+        var plugin = getSystemPanelPlugin()
+        systemPanelPlugin.write_fileDst(data, "../templates/applet_bak")
+    }
     
     function screenInfo() {
         var plugin = getSystemPanelPlugin()
