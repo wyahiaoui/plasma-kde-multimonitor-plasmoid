@@ -9,12 +9,13 @@ import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.plasma.components 2.0
 import org.kde.plasma.components 3.0 as PlasmaComponents3
 
-// import org.kde.private.multimonitor 1.0 as WW;
+import org.kde.private.multimonitor 1.0 as WW;
 
 // import "../code/widgetHandler.js" as WidgetHandler
 Item {
     id: root
-    // property var systemPanelPlugin: WW.SystemPanel {}
+    // property var desktopWatcherPlugin: WW.DesktopEventWatcher {}
+    property var str: "freeeee"
     readonly property int minButtonSize: units.iconSizes.small
     readonly property int medButtonSize: units.iconSizes.medium
     readonly property int maxButtonSize: units.iconSizes.large
@@ -45,32 +46,43 @@ Item {
         
     }
     
+
+    WW.DesktopEventWatcher {
+        id: desktopEventWatcher
+        status: blabla.text
+        onStatusChanged: {
+            console.log("lelel");
+        }
+    }
+
+
     Layout.preferredWidth: (iconSize  * screenViews.columns)
     Layout.preferredHeight: (iconSize  * screenViews.rows)
     
-    PlasmaCore.DataSource {
-        id: hpSource
-        engine: "hotplug"
-        connectedSources: sources
-        interval: 1
+    // PlasmaCore.DataSource {
+    //     id: hpSource
+    //     engine: "hotplug"
+    //     connectedSources: sources
+    //     interval: 1
 
-        onSourceAdded: {
-            // disconnectSource(source);
-            // connectSource(source);
-            // sdSource.connectedSources = sources
-            console.log("Addsource", source);
-        }
-        onSourceRemoved: {
-            console.log("source", source);
-            // disconnectSource(source);
-        }
-        onDataChanged: {
-            console.log("changed", sources);
-        }
+    //     onSourceAdded: {
+    //         // disconnectSource(source);
+    //         // connectSource(source);
+    //         // sdSource.connectedSources = sources
+    //         console.log("Addsource", source);
+    //     }
+    //     onSourceRemoved: {
+    //         console.log("source", source);
+    //         // disconnectSource(source);
+    //     }
+    //     onDataChanged: {
+    //         console.log("changed", sources);
+    //     }
 
-    }
+    // }
 
-    Plasmoid.preferredRepresentation: Plasmoid.fullRepresentation
+    Plasmoid.preferredRepresentation: Plasmoid.fullRepresentation 
+
 
     ColumnLayout {
         id: columnPage
@@ -110,6 +122,10 @@ Item {
                 text: screenViews.vmPlaceHolder
                 color: "white"
             }
+                TextInput {
+        id: blabla
+        text: root.str
+    }
             // Rectangle {
             //     color: "red"
             //     Layout.preferredWidth: 40

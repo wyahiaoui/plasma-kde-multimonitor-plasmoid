@@ -3,6 +3,9 @@ cmake_minimum_required(VERSION 2.8.12 FATAL_ERROR)
 project(multiMonitor)
 set(QT_MIN_VERSION "6.0.0")
 set(KF5_MIN_VERSION "5.0.0")
+
+set(CMAKE_AUTOMOC ON)
+
 # option(WITH_X11 "Build with X11 support. Building without is experimental" ON)
 find_package(ECM 0.0.11 REQUIRED NO_MODULE)
 
@@ -35,7 +38,6 @@ find_package(KF5 ${KF5_MIN_VERSION} REQUIRED COMPONENTS Plasma)
 
 add_subdirectory(plugin)
 # add_subdirectory(translations)
-
 
 
 # set(PLASMA_RELATIVE_DATA_INSTALL_DIR "plasma/plasmoids/org.kde.plasma.multimonitor/contents")
