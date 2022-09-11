@@ -43,15 +43,16 @@ Item {
     
     SystemPanel {
         id: systemPanel
-        
     }
     
 
     WW.DesktopEventWatcher {
         id: desktopEventWatcher
         status: blabla.text
-        onStatusChanged: {
+        onConfigChanged: {
             console.log("lelel");
+            screenViews.model = systemPanel.screenInfo()
+            screenViews.updatePlasmoids(1)
         }
     }
 
