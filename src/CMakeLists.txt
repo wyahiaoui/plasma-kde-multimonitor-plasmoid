@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.8.12 FATAL_ERROR)
 
 project(multiMonitor)
-set(QT_MIN_VERSION "6.0.0")
+set(QT_MIN_VERSION "5.15.0")
 set(KF5_MIN_VERSION "5.0.0")
 
 set(CMAKE_AUTOMOC ON)

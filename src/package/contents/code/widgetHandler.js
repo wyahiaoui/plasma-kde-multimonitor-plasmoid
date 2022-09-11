@@ -152,10 +152,18 @@ function build_container(attributes, geo) {
   return geo
 }
 function moveWidgets(model, content, srcScreen, dstScreen) {
+  console.log("unde", plasmoid.configuration.ignoredPlasmoid)
+  var iii = plasmoid.configuration.ignoredPlasmoid.split(",")
+  var elements = []
+  for (const ii of iii) {
+    elements.push(ii.split("-")[1])
+  }
   var geo = [];
+  var ignore = []
   const srcModel = model.find(x => x.id == srcScreen)
   const dstModel = model.find(x => x.id == dstScreen)
   content = content.split("\n\n");
+  
   var marked = -1;
   var parsed = parseFile(content);
   for (var _pj_c = 0; _pj_c < parsed.length; _pj_c += 1) {
@@ -181,14 +189,25 @@ function moveWidgets(model, content, srcScreen, dstScreen) {
       }
     }
     else if (parsed[_pj_c].config.length > 2 && parsed[_pj_c].config[0] === "Containments" && parsed[_pj_c].config[1] == srcScreen + 1 && parsed[_pj_c].config[2] === "Applets") {
-      parsed[_pj_c].config[1] = dstScreen + 1;
-      if (parsed[_pj_c].config.length > 3 && parsed[_pj_c].config[2] == "Applets" && parsed[_pj_c].config[4] == "Configuration" && 1) {
+      if (parsed[_pj_c].config.length == 4) {
         for (var i = 0; i < parsed[_pj_c].attributes.length; i++) {
-          if (["Weight", "Height", "Width"].some(sub => parsed[_pj_c].attributes[i][0].includes(sub))) {
-            parsed[_pj_c].attributes[i][1] = Math.round(parsed[_pj_c].attributes[i][1] * ((srcModel.width * 1.0) / dstModel.width ))
+          // if (parsed[_pj_c].attributes[i][0].includes("plugin") && parsed[_pj_c].attributes[i][1].includes("org.kde.plasma.multimonitor")) {
+          if (parsed[_pj_c].attributes[i][0].includes("plugin") && elements.some(sub => parsed[_pj_c].attributes[i][1].includes(sub))) {
+            ignore.push(parsed[_pj_c].config[3])
+            break;
           }
-            
         }
+      }
+      if (!ignore.includes(parsed[_pj_c].config[3])) {
+        if (parsed[_pj_c].config.length > 3 && parsed[_pj_c].config[2] == "Applets" && parsed[_pj_c].config[4] == "Configuration" && 1) {
+          for (var i = 0; i < parsed[_pj_c].attributes.length; i++) {
+            if (["Weight", "Height", "Width"].some(sub => parsed[_pj_c].attributes[i][0].includes(sub))) {
+              parsed[_pj_c].attributes[i][1] = Math.round(parsed[_pj_c].attributes[i][1] * ((srcModel.width * 1.0) / dstModel.width ))
+            }
+              
+          }
+        }
+        parsed[_pj_c].config[1] = dstScreen + 1;
       }
     }
     
@@ -200,17 +219,36 @@ function moveWidgets(model, content, srcScreen, dstScreen) {
 }
 
 
-function CountApplets(parsed, screen=0) {
-  var i = 0;
+function GetAppletsPlain(parsed, screen=0) {
+  var applets = [];
   for (var  _pj_c = 0; _pj_c < parsed.length; _pj_c += 1) {
     var par = parsed[_pj_c];
     if (par.config == null) continue;
     if (par.config.length == 4 && par.config[0] === "Containments" && par.config[1] == screen + 1 && par.type == 1) {
-      i++;
+      for (var i = 0; i < par.attributes.length; i++) {
+        if (parsed[_pj_c].attributes[i][0].includes("plugin")) {
+          applets.push([parsed[_pj_c].config[3], parsed[_pj_c].attributes[i][1]])
+        }
+      }
     }
   }
-  return i;
+  return applets;
 }
+
+function GetApplets(content, screens=1) {
+  var parsed = parseFile(content.split("\n\n"));
+  var appletList = GetAppletsPlain(parsed, 0);
+  for (var i = 1; i < screens; i++) {
+    appletList.concat(GetAppletsPlain(parsed, i));
+    console.log("sucj", appletList)
+  }
+  return  appletList;
+}
+
+function CountApplets(parsed, screen=0) {
+  return GetAppletsPlain(parsed, screen).length;
+}
+
 
 function ParseCountsApplets(content, screen=0) {
   var parsed = parseFile(content.split("\n\n"))

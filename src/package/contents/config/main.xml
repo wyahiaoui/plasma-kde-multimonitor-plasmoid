@@ -6,9 +6,9 @@
   <kcfgfile name=""/>
 
   <group name="General">
-    <entry name="show_turnOffScreen" type="Bool">
-      <default>true</default>
-    </entry>
+      <entry name="ignoredPlasmoid" type="String">
+          <default></default>
+      </entry>
     <entry name="show_requestShutDown" type="Bool">
       <default>true</default>
     </entry>

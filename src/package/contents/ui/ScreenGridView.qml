@@ -116,7 +116,7 @@ Grid {
 
     function updatePlasmoids(dst) {
         // items.dataConfig = systemPanel.readData()
-        items.dataConfig = WidgetHandler.moveWidgets(items.model, items.dataConfig, screenViews.vmPlaceHolder + 0, dst);
+        // items.dataConfig = WidgetHandler.moveWidgets(items.model, items.dataConfig, screenViews.vmPlaceHolder + 0, dst);
 
         // systemPanelPlugin.write_fileRefresh(items.dataConfig)
         screenViews.model = systemPanel.screenInfo()

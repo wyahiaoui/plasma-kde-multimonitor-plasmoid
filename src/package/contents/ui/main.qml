@@ -60,28 +60,8 @@ Item {
     Layout.preferredWidth: (iconSize  * screenViews.columns)
     Layout.preferredHeight: (iconSize  * screenViews.rows)
     
-    // PlasmaCore.DataSource {
-    //     id: hpSource
-    //     engine: "hotplug"
-    //     connectedSources: sources
-    //     interval: 1
 
-    //     onSourceAdded: {
-    //         // disconnectSource(source);
-    //         // connectSource(source);
-    //         // sdSource.connectedSources = sources
-    //         console.log("Addsource", source);
-    //     }
-    //     onSourceRemoved: {
-    //         console.log("source", source);
-    //         // disconnectSource(source);
-    //     }
-    //     onDataChanged: {
-    //         console.log("changed", sources);
-    //     }
-
-    // }
-
+    Plasmoid.compactRepresentation: Image {source: "../images/computer-screen-svgrepo-com.svg"}
     Plasmoid.preferredRepresentation: Plasmoid.fullRepresentation 
 
 
@@ -106,6 +86,9 @@ Item {
                 PlasmaComponents3.Button {
                     icon.name: "document-revert-symbolic"
                     // tooltip: i18n("Refresh")
+                    onClicked: {
+                        console.log("YALALALLewlj", plasmoid.configuration.ignoredPlasmoid)
+                    }
                 }
 
                 PlasmaComponents3.Button {

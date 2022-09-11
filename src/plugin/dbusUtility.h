@@ -60,7 +60,7 @@ class DesktopEventWatcher : public QObject
             setConfig(config + 1);
             std::cout << "kscreen " << status.toStdString() << std::endl;
             std::vector<ScreenParams>  vv = SystemPanel().screenInfo();
-            for (const ScreenParams v : vv) {
+            for (ScreenParams &v : vv) {
                 std::cout << "la " << v.name().toStdString() << "id: " << v.id() << std::endl;
             }
         }
