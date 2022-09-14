@@ -11,7 +11,7 @@ import org.kde.plasma.components 3.0 as PlasmaComponents3
 
 import org.kde.private.multimonitor 1.0 as WW;
 
-// import "../code/widgetHandler.js" as WidgetHandler
+import "../code/widgetHandler.js" as WidgetHandler
 Item {
     id: root
     // property var desktopWatcherPlugin: WW.DesktopEventWatcher {}
@@ -87,7 +87,9 @@ Item {
                     icon.name: "document-revert-symbolic"
                     // tooltip: i18n("Refresh")
                     onClicked: {
-                        console.log("YALALALLewlj", plasmoid.configuration.ignoredPlasmoid)
+                        // console.log("YALALALLewlj", plasmoid.configuration.ignoredPlasmoid)
+                        const conf = WidgetHandler.removeApplets(systemPanel.readData())
+                        systemPanel.writeData(conf)
                     }
                 }
 

@@ -151,21 +151,41 @@ function build_container(attributes, geo) {
   }
   return geo
 }
-function moveWidgets(model, content, srcScreen, dstScreen) {
-  console.log("unde", plasmoid.configuration.ignoredPlasmoid)
+
+
+function ignoredWidgets(parsed, srcScreen) {
   var iii = plasmoid.configuration.ignoredPlasmoid.split(",")
   var elements = []
   for (const ii of iii) {
     elements.push(ii.split("-")[1])
   }
-  var geo = [];
   var ignore = []
+  for (var _pj_c = 0; _pj_c < parsed.length; _pj_c++)
+  {
+    if (parsed[_pj_c].config.length == 4 && parsed[_pj_c].config[0] === "Containments" && parsed[_pj_c].config[1] == srcScreen + 1 && parsed[_pj_c].config[2] === "Applets") {
+      for (var i = 0; i < parsed[_pj_c].attributes.length; i++) {
+        // if (parsed[_pj_c].attributes[i][0].includes("plugin") && parsed[_pj_c].attributes[i][1].includes("org.kde.plasma.multimonitor")) {
+        if (parsed[_pj_c].attributes[i][0].includes("plugin") && elements.some(sub => parsed[_pj_c].attributes[i][1].includes(sub))) {
+          ignore.push(parsed[_pj_c].config[3])
+          break;
+        }
+      }
+    }
+  }
+  return ignore
+}
+
+function moveWidgets(model, content, srcScreen, dstScreen) {
+  console.log("unde", plasmoid.configuration.ignoredPlasmoid)
+
+  var geo = [];
   const srcModel = model.find(x => x.id == srcScreen)
   const dstModel = model.find(x => x.id == dstScreen)
   content = content.split("\n\n");
   
   var marked = -1;
   var parsed = parseFile(content);
+  var ignore = ignoredWidgets(parsed, srcScreen)
   for (var _pj_c = 0; _pj_c < parsed.length; _pj_c += 1) {
     if (parsed[_pj_c] == null) continue;
     if (parsed[_pj_c].config.length === 2 && parsed[_pj_c].config[0] === "Containments" && (parsed[_pj_c].config[1] == srcScreen + 1 || parsed[_pj_c].config[1] == dstScreen + 1  )) {
@@ -174,9 +194,9 @@ function moveWidgets(model, content, srcScreen, dstScreen) {
         for (var _pj_f = 0; _pj_f < attributes.length; _pj_f += 1) {
           var att = attributes[_pj_f];
           if ((att[0].indexOf("ItemGeometries")) == 0) {
+            // add ignore geo for ignored elements
             var newGeo = parsed[_pj_c].attributes.splice(_pj_f, 1)[0]
             newGeo[1] = scaleElements(newGeo[1], srcModel, dstModel)
-            console.log("inco", newGeo[1]);
             geo.push([newGeo[0], newGeo[1]])
             _pj_f--;
           } 
@@ -189,16 +209,8 @@ function moveWidgets(model, content, srcScreen, dstScreen) {
       }
     }
     else if (parsed[_pj_c].config.length > 2 && parsed[_pj_c].config[0] === "Containments" && parsed[_pj_c].config[1] == srcScreen + 1 && parsed[_pj_c].config[2] === "Applets") {
-      if (parsed[_pj_c].config.length == 4) {
-        for (var i = 0; i < parsed[_pj_c].attributes.length; i++) {
-          // if (parsed[_pj_c].attributes[i][0].includes("plugin") && parsed[_pj_c].attributes[i][1].includes("org.kde.plasma.multimonitor")) {
-          if (parsed[_pj_c].attributes[i][0].includes("plugin") && elements.some(sub => parsed[_pj_c].attributes[i][1].includes(sub))) {
-            ignore.push(parsed[_pj_c].config[3])
-            break;
-          }
-        }
-      }
-      if (!ignore.includes(parsed[_pj_c].config[3])) {
+
+      if (!ignore.includes(parsed[_pj_c].config[3]) || 1) {
         if (parsed[_pj_c].config.length > 3 && parsed[_pj_c].config[2] == "Applets" && parsed[_pj_c].config[4] == "Configuration" && 1) {
           for (var i = 0; i < parsed[_pj_c].attributes.length; i++) {
             if (["Weight", "Height", "Width"].some(sub => parsed[_pj_c].attributes[i][0].includes(sub))) {

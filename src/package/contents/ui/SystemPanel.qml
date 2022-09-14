@@ -60,6 +60,12 @@ Item {
     function writeData(data) {
         // console.log("2al7it", data)
         var plugin = getSystemPanelPlugin()
+        systemPanelPlugin.write_fileRefresh(data)
+    }
+
+    function writeDataConfig(data) {
+        // console.log("2al7it", data)
+        var plugin = getSystemPanelPlugin()
         systemPanelPlugin.write_fileDst(data, "../templates/applet_bak")
     }
     
