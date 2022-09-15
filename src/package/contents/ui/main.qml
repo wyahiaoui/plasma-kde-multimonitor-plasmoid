@@ -48,7 +48,7 @@ Item {
 
     WW.DesktopEventWatcher {
         id: desktopEventWatcher
-        status: blabla.text
+        status: ""
         onConfigChanged: {
             console.log("lelel");
             screenViews.model = systemPanel.screenInfo()
@@ -65,42 +65,72 @@ Item {
     Plasmoid.preferredRepresentation: Plasmoid.fullRepresentation 
 
 
-    ColumnLayout {
+    Grid {
         id: columnPage
         Column {
             Layout.alignment: Qt.AlignRight
             ScreenGridView {
                 id: screenViews
             }
-            RowLayout {
+            ColumnLayout {
                 id: layout_column
-
-                y: 50
+                // Column {
+                Layout.alignment: Qt.AlignLeft
+                Text {
+                    text: "profiles"
+                    color: "white"
+                }
+                // }
+                // y: 50
                 Row {
-                    id: rect
-                    // width: 100; height: 50
+                    Rectangle {
+                        id: rect
+                        color: "white"
+                        x: 20   
+                        width: 100; height: 100
+                        Column {
+                            Item {
+                                id: contactDelegate
+                                ListView {
+                                    // width: 80; height: 30
+                                    // y: 30
+                                    model:[{name: "hohmn", "number": "545454"}, {name: "sdadq", "number": "7872"}]
+                                    delegate: Column {Text {
+                                        text: modelData.name + ": " + modelData.number
+                                        color: "black"
+                                    }}
 
-                    Item {
-                        id: contactDelegate
-                        ListView {
-                            // width: 50; height: 30
-
-                            model:[{name: "hohmn", "number": "545454"}]
-                            delegate: Text {
-                                text: modelData.name + ": " + modelData.number
-                                color: "white"
+                                }
                             }
 
+                            }
                         }
-                    }
+                        Column {
+                            PlasmaComponents3.Button {
+                                icon.name: "go-up-symbolic"
+                                // tooltip: i18n("Refresh")
+                                onClicked: {
+        
+                                }
+                            }
+                            PlasmaComponents3.Button {
+                                icon.name: "go-up-symbolic.svg"
+                                // tooltip: i18n("Refresh")
+                                onClicked: {
+        
+                                }
+                            }
+                        }
                 }
             }
+            
+        }
+        Column {
             ColumnLayout {
                 // spacing:( iconSize  * screenViews.columns ) / (screenViews.items.length - 1)
-                x: parent.width + 1
-                y: 0
                 Column {
-                    Layout.alignment: Qt.AlignLeft
+                    // y: 80
+                    // Layout.alignment: Qt.AlignLeft
                     // anchors.margin: 4
                     PlasmaComponents3.Button {
                         icon.name: "view-refresh-symbolic"
@@ -111,7 +141,16 @@ Item {
                     }
 
                     PlasmaComponents3.Button {
-                        icon.name: "document-revert-symbolic"
+                        icon.name: "edit-delete-symbolic"
+                        // tooltip: i18n("Refresh")
+                        onClicked: {
+  
+                        }
+                    }
+
+
+                    PlasmaComponents3.Button {
+                        icon.name: "edit-undo-symbolic"
                         // tooltip: i18n("Refresh")
                         onClicked: {
                             // console.log("YALALALLewlj", plasmoid.configuration.ignoredPlasmoid)
@@ -130,15 +169,7 @@ Item {
                     }
                 }
 
-                TextInput {
-                    // Layout.alignment: Qt.AlignRight
-                    text: screenViews.vmPlaceHolder
-                    color: "white"
-                }
-                TextInput {
-                    id: blabla
-                    text: root.str
-                }
+
 
                 // Rectangle {
                 //     color: "red"
@@ -150,8 +181,12 @@ Item {
 
             }
         }
-
-
+        Column {
+            TextInput {
+                id: blabla
+                text: root.str
+            }
+        }
         
 
        
