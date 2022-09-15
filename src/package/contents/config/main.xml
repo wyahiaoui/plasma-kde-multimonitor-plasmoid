@@ -37,7 +37,7 @@
       <default>true</default>
     </entry>
     <entry name="rows" type="Int">
-      <default>2</default>
+      <default>4</default>
     </entry>
     <entry name="columns" type="Int">
       <default>3</default>

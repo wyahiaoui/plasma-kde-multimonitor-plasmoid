@@ -19,16 +19,16 @@ Item {
     readonly property int minButtonSize: units.iconSizes.small
     readonly property int medButtonSize: units.iconSizes.medium
     readonly property int maxButtonSize: units.iconSizes.large
-    Layout.minimumWidth: minButtonSize * screenViews.columns
-    Layout.minimumHeight: minButtonSize * screenViews.rows
+    // Layout.minimumWidth: minButtonSize * screenViews.columns
+    Layout.minimumHeight: minButtonSize * (screenViews.rows)
 
-    Layout.maximumWidth: maxButtonSize * screenViews.columns
-    Layout.maximumHeight: maxButtonSize * screenViews.rows
+    // Layout.maximumWidth: maxButtonSize * screenViews.columns
+    // Layout.maximumHeight: maxButtonSize * (screenViews.rows + 10)
     
     readonly property int iconSize: {
         var value = 0
         if(plasmoid.formFactor != PlasmaCore.Types.Vertical){
-            value = height / screenViews.rows
+            value = height / (screenViews.rows ) + 1
         }
         else {
             value = width / screenViews.columns
@@ -52,13 +52,13 @@ Item {
         onConfigChanged: {
             console.log("lelel");
             screenViews.model = systemPanel.screenInfo()
-            screenViews.updatePlasmoids(1)
+            screenViews.updatePlasmoids(0)
         }
     }
 
-
+ 
     Layout.preferredWidth: (iconSize  * screenViews.columns)
-    Layout.preferredHeight: (iconSize  * screenViews.rows)
+    Layout.preferredHeight: iconSize  * (screenViews.rows + 1)
     
 
     Plasmoid.compactRepresentation: Image {source: "../images/computer-screen-svgrepo-com.svg"}
@@ -67,59 +67,96 @@ Item {
 
     ColumnLayout {
         id: columnPage
-        ScreenGridView {
-            id: screenViews
-        }
-        RowLayout {
-            spacing:( iconSize  * screenViews.columns ) / (screenViews.items.length - 1)
-            Row {
-                Layout.alignment: Qt.AlignLeft
-                // anchors.margin: 4
-                PlasmaComponents3.Button {
-                    icon.name: "view-refresh-symbolic"
-                    // tooltip: i18n("Refresh")
-                    onClicked: {
-                        systemPanel.refresh()
-                    }
-                }
+        Column {
+            Layout.alignment: Qt.AlignRight
+            ScreenGridView {
+                id: screenViews
+            }
+            RowLayout {
+                id: layout_column
 
-                PlasmaComponents3.Button {
-                    icon.name: "document-revert-symbolic"
-                    // tooltip: i18n("Refresh")
-                    onClicked: {
-                        // console.log("YALALALLewlj", plasmoid.configuration.ignoredPlasmoid)
-                        const conf = WidgetHandler.removeApplets(systemPanel.readData())
-                        systemPanel.writeData(conf)
-                    }
-                }
+                y: 50
+                Row {
+                    id: rect
+                    // width: 100; height: 50
 
-                PlasmaComponents3.Button {
-                    icon.name: "document-save-symbolic"
-                    onClicked: {
-                        var conf = systemPanel.readData();
-                        systemPanel.writeData(conf)
-                        
+                    Item {
+                        id: contactDelegate
+                        ListView {
+                            // width: 50; height: 30
+
+                            model:[{name: "hohmn", "number": "545454"}]
+                            delegate: Text {
+                                text: modelData.name + ": " + modelData.number
+                                color: "white"
+                            }
+
+                        }
                     }
                 }
             }
+            ColumnLayout {
+                // spacing:( iconSize  * screenViews.columns ) / (screenViews.items.length - 1)
+                x: parent.width + 1
+                y: 0
+                Column {
+                    Layout.alignment: Qt.AlignLeft
+                    // anchors.margin: 4
+                    PlasmaComponents3.Button {
+                        icon.name: "view-refresh-symbolic"
+                        // tooltip: i18n("Refresh")
+                        onClicked: {
+                            systemPanel.refresh()
+                        }
+                    }
 
-            TextInput {
-                // Layout.alignment: Qt.AlignRight
-                text: screenViews.vmPlaceHolder
-                color: "white"
-            }
+                    PlasmaComponents3.Button {
+                        icon.name: "document-revert-symbolic"
+                        // tooltip: i18n("Refresh")
+                        onClicked: {
+                            // console.log("YALALALLewlj", plasmoid.configuration.ignoredPlasmoid)
+                            const conf = WidgetHandler.removeApplets(systemPanel.readData())
+                            systemPanel.writeData(conf)
+                        }
+                    }
+
+                    PlasmaComponents3.Button {
+                        icon.name: "document-save-symbolic"
+                        onClicked: {
+                            var conf = systemPanel.readData();
+                            systemPanel.writeData(conf)
+                            
+                        }
+                    }
+                }
+
                 TextInput {
-        id: blabla
-        text: root.str
-    }
-            // Rectangle {
-            //     color: "red"
-            //     Layout.preferredWidth: 40
-            //     Layout.preferredHeight: 40
-            //     Layout.alignment: Qt.AlignCenter
+                    // Layout.alignment: Qt.AlignRight
+                    text: screenViews.vmPlaceHolder
+                    color: "white"
+                }
+                TextInput {
+                    id: blabla
+                    text: root.str
+                }
 
-            // }
+                // Rectangle {
+                //     color: "red"
+                //     Layout.preferredWidth: 40
+                //     Layout.preferredHeight: 40
+                //     Layout.alignment: Qt.AlignCenter
 
+                // }
+
+            }
         }
+
+
+        
+
+       
+
+    
     }
+
 }
