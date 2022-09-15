@@ -83,44 +83,63 @@ Item {
                 // }
                 // y: 50
                 Row {
-                    Rectangle {
-                        id: rect
-                        color: "white"
-                        x: 20   
-                        width: 100; height: 100
-                        Column {
+                    spacing: 25
+                    Column {
+
+                        Rectangle {
+                            id: rect
+                            color: "white"
+                            width: 100; height: 100
+                            x: 20   
                             Item {
                                 id: contactDelegate
                                 ListView {
-                                    // width: 80; height: 30
+                                    id: listView
+                                    width: 100; height: 100
                                     // y: 30
-                                    model:[{name: "hohmn", "number": "545454"}, {name: "sdadq", "number": "7872"}]
-                                    delegate: Column {Text {
-                                        text: modelData.name + ": " + modelData.number
-                                        color: "black"
-                                    }}
+                                    model:systemPanel.screenInfo()
+                                    delegate: 
+                                    // Row {
+                                        Text {
+                                            text: modelData.name + ": " + modelData.id
+                                            color: "black"
+                                            MouseArea {
+                                                anchors.fill: parent
+                                                onClicked: listView.currentIndex = index
+                                            }
+                                    }
+                                    highlight: Rectangle {
+                                        color: 'grey'
+                                        Text {
+                                            anchors.centerIn: parent
+                                            text: 'Hello ' + model.get(list.currentIndex).name
+                                            color: 'white'
+                                        }
+                                    }
+                                    focus: true
+                                    // }
 
                                 }
                             }
 
+                        }
+                    }
+                    Column {
+                        PlasmaComponents3.Button {
+                            icon.name: "go-up-symbolic"
+                            // tooltip: i18n("Refresh")
+                            onClicked: {
+    
                             }
                         }
-                        Column {
-                            PlasmaComponents3.Button {
-                                icon.name: "go-up-symbolic"
-                                // tooltip: i18n("Refresh")
-                                onClicked: {
-        
-                                }
-                            }
-                            PlasmaComponents3.Button {
-                                icon.name: "go-up-symbolic.svg"
-                                // tooltip: i18n("Refresh")
-                                onClicked: {
-        
-                                }
+                        PlasmaComponents3.Button {
+                            icon.name: "go-up-symbolic.svg"
+                            // tooltip: i18n("Refresh")
+                            onClicked: {
+    
                             }
                         }
+                    }
                 }
             }
             
