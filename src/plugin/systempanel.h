@@ -77,9 +77,10 @@ public Q_SLOTS:
     int refresh();
     int monitorCount();
     std::vector<ScreenParams> screenInfo();
-    QString read_file(const char *filename =  DST_FILE);
+    QString read_file(QString filename);
     void write_fileRefresh(QString content, const char *filename =  nullptr);
     void write_fileDst(QString content, QString filename);
+    QString workingDirectory();
 };
 
 #endif

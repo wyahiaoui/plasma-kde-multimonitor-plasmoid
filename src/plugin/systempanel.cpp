@@ -81,11 +81,26 @@ static const char * homeDirectory() {
 }
 
 
+QString SystemPanel::workingDirectory() {
+   char cwd[1024];
+   if (getcwd(cwd, sizeof(cwd)) != NULL) {
+       printf("Current working dir: %s\n", cwd);
+       return QString::fromUtf8(cwd);
+   } else {
+       perror("getcwd() error");
+       return QString::fromUtf8("No Working Directory");
+   }
+}
 
-QString SystemPanel::read_file(const char *filename) {
-    std::ifstream t(std::string(homeDirectory()) + std::string(filename));
+QString SystemPanel::read_file(QString filename) {
+    std::ifstream t;
+    if (!filename.isEmpty())
+        t = std::ifstream(filename.toStdString());
+    else 
+        t = std::ifstream(std::string(homeDirectory()) + std::string(DST_FILE));
     std::string str;
 
+    std::cout << "filename: saslaks" << filename.toStdString().c_str() << std::endl;
     // t.seekg(0, std::ios::end);   
     // str.reserve(t.tellg());
     // t.seekg(0, std::ios::beg);
@@ -97,7 +112,6 @@ QString SystemPanel::read_file(const char *filename) {
 
 static void write_file(QString content, const char *filename) {
     std::ofstream plasmaConfig;
-    std::cout << "FILENAMAM";
     if (filename != nullptr)
         plasmaConfig = std::ofstream(std::string(filename));
     else 

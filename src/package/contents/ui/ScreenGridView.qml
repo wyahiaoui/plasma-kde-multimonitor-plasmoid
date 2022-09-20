@@ -39,6 +39,11 @@ Grid {
         
         return value
     }
+    // Column{    Text {
+    //     text: "parasms" + systemPanelPlugin.workingDirectory()
+    //     color: "blue"
+    // }
+    // }
     spacing: 0
     // width: parent.width
     // height: parent.height

@@ -74,34 +74,40 @@ Item {
             }
             ColumnLayout {
                 id: layout_column
-                // Column {
                 Layout.alignment: Qt.AlignLeft
                 Text {
                     text: "profiles"
                     color: "white"
                 }
-                // }
-                // y: 50
                 Row {
+                    id: profilesRow
                     spacing: 25
                     Column {
-
                         Rectangle {
                             id: rect
                             color: "white"
                             width: 100; height: 100
                             x: 20   
                             Item {
-                                id: contactDelegate
+                                id: profileItem
+                                ListModel {
+                                    id: profilesModel
+                                    Component.onCompleted : {
+                                        var  profiles = systemPanel.readConfig();
+                                        for (var i = 0; i < profiles.length; i++) {
+                                            profilesModel.append(profiles[i])
+                                        }
+                                    }
+                                }
+                                
                                 ListView {
                                     id: listView
+                                    property int savedIndex : 0
+
                                     width: 100; height: 100
-                                    // y: 30
-                                    model:systemPanel.screenInfo()
-                                    delegate: 
-                                    // Row {
-                                        Text {
-                                            text: modelData.name + ": " + modelData.id
+                                    model: profilesModel
+                                    delegate: Text {
+                                            text: name + ": " + id
                                             color: "black"
                                             MouseArea {
                                                 anchors.fill: parent
@@ -110,15 +116,26 @@ Item {
                                     }
                                     highlight: Rectangle {
                                         color: 'grey'
-                                        Text {
-                                            anchors.centerIn: parent
-                                            text: 'Hello ' + model.get(list.currentIndex).name
-                                            color: 'white'
+                                    }
+                                    // onCurrentIndexChanged:{
+                                    //     console.log("Current index changed")
+                                    //     if(currentIndex !==0){
+                                    //         savedIndex = currentIndex
+                                    //     }
+                                    // }
+                                    onModelChanged: {
+                                        if (currentIndex > savedIndex) {
+                                            profilesModel.insert(savedIndex, profilesModel.get(currentIndex))                                
+                                            profilesModel.remove(currentIndex + 1)
+                                            
                                         }
+                                        else if (currentIndex < savedIndex) {
+                                            profilesModel.insert(currentIndex, profilesModel.get(savedIndex))
+                                            profilesModel.remove(savedIndex + 1)
+                                        }
+                                        currentIndex = savedIndex;
                                     }
                                     focus: true
-                                    // }
-
                                 }
                             }
 
@@ -127,16 +144,20 @@ Item {
                     Column {
                         PlasmaComponents3.Button {
                             icon.name: "go-up-symbolic"
-                            // tooltip: i18n("Refresh")
                             onClicked: {
-    
+                                if (listView.currentIndex > 0) {
+                                    listView.savedIndex = listView.currentIndex - 1  
+                                    listView.onModelChanged()
+                                }
                             }
                         }
                         PlasmaComponents3.Button {
-                            icon.name: "go-up-symbolic.svg"
-                            // tooltip: i18n("Refresh")
+                            icon.name: "go-down-symbolic.svg"
                             onClicked: {
-    
+                                if (listView.currentIndex < profilesModel.count) {
+                                    listView.savedIndex = listView.currentIndex + 1  
+                                    listView.onModelChanged()
+                                }
                             }
                         }
                     }
@@ -145,58 +166,38 @@ Item {
             
         }
         Column {
-            ColumnLayout {
-                // spacing:( iconSize  * screenViews.columns ) / (screenViews.items.length - 1)
-                Column {
-                    // y: 80
-                    // Layout.alignment: Qt.AlignLeft
-                    // anchors.margin: 4
-                    PlasmaComponents3.Button {
-                        icon.name: "view-refresh-symbolic"
-                        // tooltip: i18n("Refresh")
-                        onClicked: {
-                            systemPanel.refresh()
-                        }
-                    }
-
-                    PlasmaComponents3.Button {
-                        icon.name: "edit-delete-symbolic"
-                        // tooltip: i18n("Refresh")
-                        onClicked: {
-  
-                        }
-                    }
-
-
-                    PlasmaComponents3.Button {
-                        icon.name: "edit-undo-symbolic"
-                        // tooltip: i18n("Refresh")
-                        onClicked: {
-                            // console.log("YALALALLewlj", plasmoid.configuration.ignoredPlasmoid)
-                            const conf = WidgetHandler.removeApplets(systemPanel.readData())
-                            systemPanel.writeData(conf)
-                        }
-                    }
-
-                    PlasmaComponents3.Button {
-                        icon.name: "document-save-symbolic"
-                        onClicked: {
-                            var conf = systemPanel.readData();
-                            systemPanel.writeData(conf)
-                            
-                        }
-                    }
+            PlasmaComponents3.Button {
+                icon.name: "view-refresh-symbolic"
+                onClicked: {
+                    systemPanel.refresh()
                 }
+            }
+
+            PlasmaComponents3.Button {
+                icon.name: "edit-delete-symbolic"
+                onClicked: {
+
+                }
+            }
 
 
+            PlasmaComponents3.Button {
+                icon.name: "edit-undo-symbolic"
+                onClicked: {
+                    // console.log("YALALALLewlj", plasmoid.configuration.ignoredPlasmoid)
+                    const conf = WidgetHandler.removeApplets(systemPanel.readData())
+                    systemPanel.writeData(conf)
+                }
+            }
 
-                // Rectangle {
-                //     color: "red"
-                //     Layout.preferredWidth: 40
-                //     Layout.preferredHeight: 40
-                //     Layout.alignment: Qt.AlignCenter
+            PlasmaComponents3.Button {
+                icon.name: "document-save-symbolic"
+                onClicked: {
+                    var conf = systemPanel.readData();
+                    systemPanel.writeData(conf)
+                    
+            }
 
-                // }
 
             }
         }

@@ -52,27 +52,32 @@ Item {
     }
 
     function readData() {
-        var data = systemPanelPlugin.read_file()
+        var data = systemPanelPlugin.read_file("")
         // systemPanelPlugin.write_file(data)
         return data
     }
 
     function writeData(data) {
-        // console.log("2al7it", data)
         var plugin = getSystemPanelPlugin()
         systemPanelPlugin.write_fileRefresh(data)
     }
 
-    function writeDataConfig(data) {
-        // console.log("2al7it", data)
+    function writeDataConfig(data, path="../assets/templates/applet_bak") {
         var plugin = getSystemPanelPlugin()
-        systemPanelPlugin.write_fileDst(data, "../templates/applet_bak")
+        systemPanelPlugin.write_fileDst(data, path)
     }
     
-    function screenInfo() {
+    function screenInfo() : list<ScreenParams> {
         var plugin = getSystemPanelPlugin()
         // plugin.homeDirectory()
         // console.log()
         return plugin.screenInfo()
+    }
+
+    function readConfig() {
+        var plugin = getSystemPanelPlugin()
+        // has to be custonized may be 
+        console.log("this", plugin.read_file("../src/package/contents/config/default.json"))
+        return JSON.parse(plugin.read_file("../src/package/contents/config/default.json"));
     }
 }

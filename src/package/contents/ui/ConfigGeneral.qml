@@ -27,7 +27,7 @@ Item {
     }
 
     ListView {
-        property var appletsList: WidgetHandler.GetApplets(systemPanelPlugin.read_file(), systemPanelPlugin.screenInfo().length) 
+        property var appletsList: WidgetHandler.GetApplets(systemPanelPlugin.read_file(""), systemPanelPlugin.screenInfo().length) 
         id: multiSelectCheckList
         model:  appletsList
         height: parent.height
@@ -39,7 +39,7 @@ Item {
 
         Component.onCompleted: {
 
-            console.log("madha", WidgetHandler.GetApplets(systemPanelPlugin.read_file(), systemPanelPlugin.screenInfo().length))
+            console.log("madha", WidgetHandler.GetApplets(systemPanelPlugin.read_file(""), systemPanelPlugin.screenInfo().length))
         }
         delegate: Row {
             Label {
